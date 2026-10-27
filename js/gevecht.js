@@ -153,6 +153,7 @@ function battleEnd(){
   if(bonus){ coins += bonus; notes.push(`${mName(m)} is ${pw===3?'volledig geëvolueerd':'geëvolueerd'}: +${Math.round(POWER_BONUS[pw]*100)}% munten (+${bonus}).`); }
   if(b.combo){ coins += b.combo; notes.push(`Combo-bonus: +${b.combo} munten.`); }
   if(win && p.luck){ coins*=2; p.luck=0; notes.push('Geluksbamboe: dubbele munten!'); }
+  if(happyGebruik(p)){ coins*=2; const o=happyOver(p); notes.push(`Happy hour: dubbele munten! ${o?`Nog ${o} gevecht${o===1?'':'en'} met dubbele munten.`:'Dat was je laatste happy-hour-gevecht.'}`); }
   p.coins += coins; p.txp += xp; m.xp += xp;
   p.log.unshift({d:Date.now(), l:b.kind==='wild'?b.ref:'boss:'+b.ref, s:b.correct, t:b.n, h:b.hints, r:b.rescue?(rescued?'ok':'mis'):'', rc:b.rescue?b.rescue.correct:0, rn:b.rescue?b.rescue.asked:0, cs:b.cshieldUsed?1:0, win}); p.log = p.log.slice(0,40);
   save();

@@ -363,3 +363,20 @@ body.w3{--map-land:#1d2858;--map-water:#0a1130;--map-line:#2de2e6}
 
 .pxscroll{overflow-x:auto;border-radius:18px;-webkit-overflow-scrolling:touch}
 @media (max-width:640px){.pxmap{width:640px;max-width:none}.plate{font-size:12px}}
+
+/* ---- EVENTS (data/events.js) ---- */
+body.ev-sint{--accent:#c8202f;--accent-sh:#8a1420;--accent-soft:#fde6e8;--on-accent:#fff;--bg:#fbf0e6;--soft:#fbf0e6}
+body.w3.ev-sint{--accent:#ff5a6a;--accent-sh:#a3202f;--accent-soft:#3a1520;--on-accent:#fff;--bg:#1a0f1d;--soft:#2a1630}
+body.ev-kerst{--accent:#1f8f4e;--accent-sh:#136034;--accent-soft:#e2f5ea;--on-accent:#fff;--bg:#eaf2fb;--soft:#eaf2fb}
+body.w3.ev-kerst{--accent:#3ddc84;--accent-sh:#1f6b3f;--accent-soft:#0f3321;--on-accent:#06101f;--bg:#0b1428;--soft:#14203f}
+.evbanner{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--card);border:2px solid var(--accent);border-radius:14px;padding:8px 12px;margin-bottom:12px}
+.evbanner img{width:34px}
+.evbanner b{font-family:var(--f-display);font-size:20px}
+.evbanner .btn{margin-left:auto}
+.evbanner.hh{border-color:var(--sun);background:var(--tip-bg)}
+img.evico{display:inline-block;width:22px;vertical-align:-4px}
+.valt{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:4}
+.valt img{position:absolute;top:-6%;image-rendering:pixelated;animation-name:valt;animation-timing-function:linear;animation-iteration-count:infinite;opacity:.9}
+@keyframes valt{0%{top:-6%;transform:translateX(0) rotate(0)}50%{transform:translateX(12px) rotate(180deg)}100%{top:104%;transform:translateX(0) rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.valt{display:none}}
+.evprijs{width:96px}.evprijs img{width:100%}

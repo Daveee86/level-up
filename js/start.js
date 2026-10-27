@@ -19,6 +19,7 @@ function vLogin(){
   return `<div class="wrap">
     <div class="hero"><div class="logo">Level<span>UP</span></div>
       <p class="muted" style="font-size:18px;margin:6px 0 0;max-width:54ch">Leer, vecht en verzamel. Elk goed antwoord is een aanval. Hoe slimmer jij wordt, hoe sterker je monsters worden.</p></div>
+    ${evActief()?`<div class="evbanner"><img class="px" src="${asset(evActief().icoon)}" alt=""><b>${evActief().banner}</b></div>`:''}
     <h2 style="font-size:26px;margin-bottom:12px">Wie gaat er spelen?</h2>
     <div class="tiles">
       ${S.profiles.map(p=>{ const m=act(p); return `<button class="ptile" data-act="pick" data-id="${p.id}"><div class="duo">${trImg(p.tr,'tr')}${m?monImg(m,'f','').replace('<img','<img style="width:70px"'):''}</div><b>${esc(p.name)}</b><span class="muted">Level ${levelInfo(p.txp).lvl} · ${p.mons.length} monster${p.mons.length===1?'':'s'}</span><span class="muted" style="font-size:13px">Groep ${p.groep}</span>${p.demo?'<span class="badge">voorbeeld</span>':''}</button>`; }).join('')}

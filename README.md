@@ -64,6 +64,11 @@ Zet een plaatje van 64x64 in `assets/trainers/` en voeg de naam toe aan `SPELER_
 ### De wereldkaart
 `python3 tools/kaart.py` maakt `assets/maps/wereld2.png` en `wereld3.png` opnieuw. Verplaats je gebouwen, plak dan de uitvoer in `KAART_PLEKKEN` in `data/werelden.js`.
 
+### Een event (Sinterklaas, Kerst, ...)
+Events staan in `data/events.js`. Ouders zetten ze aan in het ouderscherm (één tegelijk), net als happy hour.
+Een nieuw event: kopieer een blok in `EVENTS`, voeg de naam toe aan `THEMAS` in `tools/kaart.py` en teken de versiering in `versier()`,
+draai `python3 tools/kaart.py` en zet de kleuren in `css/style.css` bij "EVENTS".
+
 ## Online zetten (Cloudflare)
 
 Het project `level-up2` in Cloudflare (Workers & Pages) is gekoppeld aan deze repository.

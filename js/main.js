@@ -9,7 +9,7 @@ function render(){
   if(P() && !['login','ouders'].includes(view.s)) w = W();
   else if(view.s==='pw'){ const p=S.profiles.find(x=>x.id===view.id); if(p) w = worldOf(p.groep); }
   else if(view.s==='create' && view.c && view.c.groep) w = worldOf(view.c.groep);
-  document.body.className = 'w'+w;
+  const ev = evActief(); document.body.className = 'w'+w + (ev ? ' '+ev.klasse : '');
   setTimeout(()=>{ const sc=document.querySelector('.pxscroll'); if(sc && sc.scrollWidth>sc.clientWidth){ const wk=document.getElementById('walker'); sc.scrollLeft = wk ? wk.offsetLeft - sc.clientWidth/2 : (sc.scrollWidth-sc.clientWidth)/2; } },0);
   app.innerHTML = ({login:vLogin, pw:vPw, create:vCreate, map:vMap, isle:vIsle, les:vLes, battle:vBattle, result:vResult, bossintro:vBossIntro, shop:vShop, team:vTeam, ouders:vOuders, ouderpw:vOuderPw, editor:vEditor}[view.s] || vLogin)();
 }
@@ -25,6 +25,7 @@ document.addEventListener('click', e => {
   const t = e.target.closest('[data-act]'); if(!t || t.disabled) return;
   const a = t.dataset.act, d = t.dataset; const p = P();
   if(edAction(a, d)) return;
+  if(evAction(a, d)) return;
   switch(a){
     case 'home0': go({s:'login'}); break;
     case 'pick': go({s:'pw', id:d.id, sel:[]}); break;
