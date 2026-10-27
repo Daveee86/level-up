@@ -6,29 +6,29 @@
    2. Met een vaste lijst vragen: lesBank({ id, vak, g, titel, uitleg, vb, vragen:[ [vraag, goed, [fout, fout], uitleg], ... ] })
    Verander het id van een bestaande les niet: sterren van kinderen hangen eraan.
    ========================================================= */
-const RIJM = [['huis','muis','luis'],['kat','mat','rat'],['boom','room','droom'],['bal','stal','wal'],['pan','kan','man'],['zon','ton','bon'],['roos','doos','poos'],['maan','baan','kraan'],['beer','veer','peer'],['neus','reus','keus'],['bed','net','pet']];
+const RIJM = [['huis','muis','luis'],['kat','mat','rat'],['boom','room','droom'],['bal','stal','wal'],['pan','kan','man'],['zon','ton','bon'],['roos','doos','poos'],['maan','baan','kraan'],['beer','veer','peer'],['neus','reus','keus'],['bed','net','pet'],['hond','mond','grond'],['koek','boek','hoek'],['muur','vuur','zuur'],['vos','mos','bos'],['pop','kop','top'],['hek','gek','nek'],['tak','dak','zak'],['ring','ding','kring'],['kaas','baas','haas'],['bloem','zoem','boem'],['raam','naam','kraam'],['bijl','pijl','stijl'],['koning','woning','honing'],['bril','pil','gil']];
 function suffix(a,b){ let i=0; while(i<a.length&&i<b.length&&a[a.length-1-i]===b[b.length-1-i]) i++; return a.slice(a.length-i); }
 L.push({id:'t-rijm', vak:'taal', g:[3,3], titel:'Rijmen',
   uitleg:`Woorden rijmen als ze aan het eind hetzelfde klinken. Huis en muis rijmen: ze eindigen allebei op -uis.`,
   vb:`Wat rijmt op <b>kat</b>? Mat! (k-at, m-at)`,
   gen(){ let grp=pick(RIJM.filter(g=>g[0]!=='bed')); const [w,r]=shuffle(grp); const pool=RIJM.filter(g=>g!==grp).map(g=>g[0]);
     return {q:`Wat rijmt op "${w}"?`, say:`Wat rijmt op ${w}?`, opts:txtOpts(r,[r,...pool],3), ans:r, uitleg:`${w} en ${r} rijmen. Ze eindigen allebei op -${suffix(w,r)}.`}; }});
-const LEESW = [['🐟','vis',['vos','vas']],['🐱','kat',['kam','mat']],['⚽','bal',['bel','bak']],['🌙','maan',['man','mos']],['🌳','boom',['room','bom']],['🐭','muis',['mus','huis']],['☀️','zon',['zin','ton']],['🧥','jas',['gas','jam']],['👃','neus',['reus','nek']],['🚪','deur',['duur','dier']],['🔥','vuur',['muur','vaar']],['🐻','beer',['boer','peer']],['🌹','roos',['doos','ros']]];
+const LEESW = [['🐟','vis',['vos','vas']],['🐱','kat',['kam','mat']],['⚽','bal',['bel','bak']],['🌙','maan',['man','mos']],['🌳','boom',['room','bom']],['🐭','muis',['mus','huis']],['☀️','zon',['zin','ton']],['🧥','jas',['gas','jam']],['👃','neus',['reus','nek']],['🚪','deur',['duur','dier']],['🔥','vuur',['muur','vaar']],['🐻','beer',['boer','peer']],['🌹','roos',['doos','ros']],['🐄','koe',['koek','kou']],['🦆','eend',['een','teen']],['🥚','ei',['in','is']],['🚲','fiets',['fles','vies']],['🍌','banaan',['bank','baan']],['🐝','bij',['bil','bed']],['🦶','voet',['vos','soep']],['🔑','sleutel',['slee','sleuf']],['🧀','kaas',['kaars','haas']],['🍞','brood',['bord','boot']],['🐍','slang',['slak','lang']],['👑','kroon',['kraan','boon']],['🦁','leeuw',['meeuw','leer']],['🐌','slak',['slaap','stal']],['🎈','ballon',['balk','bal']],['🍰','taart',['kaart','tas']],['🕷️','spin',['pin','spijt']]];
 L.push({id:'t-woordlezen', vak:'taal', g:[3,3], titel:'Welk woord past bij het plaatje?',
   uitleg:`Lees elk woord letter voor letter en plak de klanken aan elkaar. Welk woord hoort bij het plaatje?`,
   vb:`🐟 → v-i-s → <b>vis</b>.`,
   gen(){ const [e,w,d]=pick(LEESW); return {q:'Welk woord hoort bij het plaatje?', vis:e, opts:shuffle([w,...d]), ans:w, big:true, uitleg:`Je ziet ${e}: dat is "${w}". Lees maar: ${w.split('').join(' - ')}.`}; }});
-const EIIJ = [['trein','ei','🚆'],['klein','ei',''],['meisje','ei','👧'],['geit','ei','🐐'],['plein','ei',''],['zeil','ei','⛵'],['ijs','ij','🍦'],['lijm','ij',''],['prijs','ij','🏆'],['tijd','ij','⏰'],['vijf','ij','5️⃣'],['pijl','ij','🏹'],['bijl','ij','🪓'],['rijst','ij','🍚']];
+const EIIJ = [['trein','ei','🚆'],['klein','ei',''],['meisje','ei','👧'],['geit','ei','🐐'],['plein','ei',''],['zeil','ei','⛵'],['ijs','ij','🍦'],['lijm','ij',''],['prijs','ij','🏆'],['tijd','ij','⏰'],['vijf','ij','5️⃣'],['pijl','ij','🏹'],['bijl','ij','🪓'],['rijst','ij','🍚'],['eiland','ei','🏝️'],['dweil','ei',''],['steil','ei',''],['reiger','ei',''],['weide','ei',''],['eigen','ei',''],['ijzer','ij',''],['fijn','ij',''],['tijger','ij','🐯'],['spijker','ij',''],['ijsbeer','ij','🐻‍❄️'],['blij','ij','😊'],['lijn','ij',''],['pijn','ij','']];
 L.push({id:'t-eiij', vak:'taal', g:[4,5], titel:'Ei of ij?',
   uitleg:`Ei en ij klinken precies hetzelfde. Welke je schrijft, moet je onthouden: het zijn <b>weetwoorden</b>. Kijk goed hoe het woord eruitziet en schrijf het een paar keer op.`,
   vb:`tr<b>ei</b>n met <b>ei</b>, <b>ij</b>s met <b>ij</b>.`,
   gen(){ const [w,x,e]=pick(EIIJ); const blank=w.replace(x,'<span class="gap">__</span>'); return {q:'Ei of ij?', vis:`${e?e+' ':''}<span class="sum">${blank}</span>`, opts:['ei','ij'], ans:x, big:true, uitleg:`Het is "${w}" met ${x}. Dit is een weetwoord: kijk er nog even goed naar.`}; }});
-const AUOU = [['blauw','au','🔵'],['auto','au','🚗'],['saus','au','🥫'],['pauw','au','🦚'],['klauw','au',''],['kous','ou','🧦'],['goud','ou','🥇'],['hout','ou','🪵'],['touw','ou','🪢'],['oud','ou','👴'],['zout','ou','🧂'],['koud','ou','🥶']];
+const AUOU = [['blauw','au','🔵'],['auto','au','🚗'],['saus','au','🥫'],['pauw','au','🦚'],['klauw','au',''],['kous','ou','🧦'],['goud','ou','🥇'],['hout','ou','🪵'],['touw','ou','🪢'],['oud','ou','👴'],['zout','ou','🧂'],['koud','ou','🥶'],['paus','au',''],['flauw','au',''],['rauw','au',''],['gauw','au',''],['dauw','au',''],['kauwgom','au',''],['augustus','au',''],['vrouw','ou','👩'],['trouw','ou','💍'],['bout','ou','🔩'],['fout','ou','❌'],['schouder','ou',''],['mouw','ou',''],['bouwen','ou','🏗️']];
 L.push({id:'t-auou', vak:'taal', g:[5,6], titel:'Au of ou?',
   uitleg:`Ook au en ou klinken hetzelfde. Het zijn weetwoorden. Een handig weetje: woorden die eindigen op -houd, -oud of -out schrijf je vaak met ou.`,
   vb:`bl<b>au</b>w, maar g<b>ou</b>d.`,
   gen(){ const [w,x,e]=pick(AUOU); const blank=w.replace(x,'<span class="gap">__</span>'); return {q:'Au of ou?', vis:`${e?e+' ':''}<span class="sum">${blank}</span>`, opts:['au','ou'], ans:x, big:true, uitleg:`Het is "${w}" met ${x}. Onthoud het als weetwoord.`}; }});
-const WW = [['worden','word','boos'],['vinden','vind','een munt'],['rijden','rijd','naar school'],['houden','houd','van pizza'],['antwoorden','antwoord','snel'],['lopen','loop','naar huis'],['spelen','speel','buiten'],['werken','werk','hard'],['fietsen','fiets','naar oma']];
+const WW = [['worden','word','boos'],['vinden','vind','een munt'],['rijden','rijd','naar school'],['houden','houd','van pizza'],['antwoorden','antwoord','snel'],['lopen','loop','naar huis'],['spelen','speel','buiten'],['werken','werk','hard'],['fietsen','fiets','naar oma'],['bouwen','bouw','een hut'],['tekenen','teken','een paard'],['zwemmen','zwem','in het meer'],['lezen','lees','een strip'],['schrijven','schrijf','een brief'],['bakken','bak','een taart'],['zingen','zing','een liedje'],['landen','land','op Schiphol'],['raden','raad','het antwoord'],['leiden','leid','de groep'],['bieden','bied','hulp'],['laden','laad','de vrachtwagen'],['snijden','snijd','het brood'],['glijden','glijd','van de glijbaan'],['wedden','wed','om een snoepje'],['branden','brand','je vingers']];
 L.push({id:'t-dt', vak:'taal', g:[6,8], titel:'D, t of dt?',
   uitleg:`Zoek eerst de <b>stam</b>: het hele werkwoord min -en (worden → word). Bij <b>ik</b> schrijf je de stam. Bij <b>hij, zij</b> en <b>jij</b> komt er een t achter. Staat jij áchter het werkwoord? Dan geen t.`,
   vb:`ik <b>word</b> · hij <b>wordt</b> · jij <b>wordt</b> · <b>word</b> jij?`,
@@ -38,14 +38,14 @@ L.push({id:'t-dt', vak:'taal', g:[6,8], titel:'D, t of dt?',
     const opts = stam.endsWith('d') ? [stam, stam.slice(0,-1)+'t', met] : [stam, met, stam+'d'];
     const u = {ik:`Bij "ik" schrijf je alleen de stam: ${stam}.`, hij:`Bij "hij": stam + t = ${met}.`, zij:`Bij "zij": stam + t = ${met}.`, jij:`"Jij" staat vóór het werkwoord: stam + t = ${met}.`, vraag:`"Jij" staat áchter het werkwoord, dus geen t: ${stam}.`}[p];
     return {q:`Vul in (${inf}):`, vis:`<span style="font-size:.6em;font-family:var(--f-display)">${zin}</span>`, opts:shuffle(opts), ans, big:true, uitleg:`De stam van ${inf} is ${stam}. ${u}`}; }});
-const VT = [['werken','werk'],['spelen','speel'],['fietsen','fiets'],['bouwen','bouw'],['dansen','dans'],['maken','maak'],['horen','hoor'],['pakken','pak'],['koken','kook'],['huilen','huil'],['lachen','lach'],['stoppen','stop'],['wonen','woon'],['tekenen','teken'],['poetsen','poets'],['zagen','zaag']];
+const VT = [['werken','werk'],['spelen','speel'],['fietsen','fiets'],['bouwen','bouw'],['dansen','dans'],['maken','maak'],['horen','hoor'],['pakken','pak'],['koken','kook'],['huilen','huil'],['lachen','lach'],['stoppen','stop'],['wonen','woon'],['tekenen','teken'],['poetsen','poets'],['zagen','zaag'],['hopen','hoop'],['kloppen','klop'],['missen','mis'],['straffen','straf'],['blaffen','blaf'],['knikken','knik'],['wassen','was'],['praten','praat'],['bellen','bel'],['tellen','tel'],['rennen','ren'],['leren','leer'],['plakken','plak'],['kussen','kus'],['juichen','juich'],['krabben','krab'],['schaatsen','schaats'],['wachten','wacht'],['vullen','vul'],['rollen','rol']];
 L.push({id:'t-vtt', vak:'taal', g:[7,8], titel:"Verleden tijd: 't kofschip",
   uitleg:`Zoek de stam (spelen → speel). Is de laatste letter een letter uit <b>'t kofschip</b> (t, k, f, s, ch, p)? Dan komt er <b>-te</b> achter. Anders <b>-de</b>.`,
   vb:`werk → k zit in 't kofschip → <b>werkte</b>. speel → l niet → <b>speelde</b>.`,
   gen(){ const [inf,stam]=pick(VT); const last = stam.endsWith('ch') ? 'ch' : stam.slice(-1); const kof = ['t','k','f','s','ch','p'].includes(last);
     const ans = stam+(kof?'te':'de'); const opts=[stam+'te', stam+'de', stam+'t'];
     return {q:`Gisteren ___ ik. (${inf})`, opts:shuffle(opts), ans, uitleg:`De stam is "${stam}". De laatste letter is ${last}. ${kof?"Die zit in 't kofschip, dus -te":"Die zit niet in 't kofschip, dus -de"}: ${ans}.`}; }});
-const WS = [['De *hond* blaft hard.','zelfstandig naamwoord'],['Mijn zus *zwemt* elke week.','werkwoord'],['Wat een *mooie* tekening!','bijvoeglijk naamwoord'],['Het *boek* ligt op tafel.','zelfstandig naamwoord'],['Wij *eten* pannenkoeken.','werkwoord'],['De *grote* olifant drinkt water.','bijvoeglijk naamwoord'],['Opa *leest* de krant.','werkwoord'],['Ik heb een *rode* fiets.','bijvoeglijk naamwoord'],['De *juf* lacht.','zelfstandig naamwoord'],['Het water is *koud*.','bijvoeglijk naamwoord'],['Ze *rennen* naar het plein.','werkwoord'],['De *vogel* zingt.','zelfstandig naamwoord']];
+const WS = [['De *hond* blaft hard.','zelfstandig naamwoord'],['Mijn zus *zwemt* elke week.','werkwoord'],['Wat een *mooie* tekening!','bijvoeglijk naamwoord'],['Het *boek* ligt op tafel.','zelfstandig naamwoord'],['Wij *eten* pannenkoeken.','werkwoord'],['De *grote* olifant drinkt water.','bijvoeglijk naamwoord'],['Opa *leest* de krant.','werkwoord'],['Ik heb een *rode* fiets.','bijvoeglijk naamwoord'],['De *juf* lacht.','zelfstandig naamwoord'],['Het water is *koud*.','bijvoeglijk naamwoord'],['Ze *rennen* naar het plein.','werkwoord'],['De *vogel* zingt.','zelfstandig naamwoord'],['De *fiets* staat in de schuur.','zelfstandig naamwoord'],['Wij *zingen* een lied.','werkwoord'],['Dat is een *lastige* som.','bijvoeglijk naamwoord'],['De *bakker* bakt brood.','zelfstandig naamwoord'],['Papa *kookt* soep.','werkwoord'],['Het *kleine* konijn eet.','bijvoeglijk naamwoord'],['Mijn *tante* woont in Gouda.','zelfstandig naamwoord'],['De baby *slaapt* rustig.','werkwoord'],['De soep is *heet*.','bijvoeglijk naamwoord'],['De *trein* is te laat.','zelfstandig naamwoord'],['Hij *schrijft* een brief.','werkwoord'],['Wat een *zachte* trui!','bijvoeglijk naamwoord'],['Het *paard* galoppeert.','zelfstandig naamwoord'],['De kinderen *springen* in het water.','werkwoord'],['De lucht is *grijs*.','bijvoeglijk naamwoord'],['Er ligt een *sleutel* op de mat.','zelfstandig naamwoord'],['Oma *breit* een sjaal.','werkwoord'],['Ik draag mijn *nieuwe* schoenen.','bijvoeglijk naamwoord']];
 L.push({id:'t-woordsoort', vak:'taal', g:[6,8], titel:'Woordsoorten',
   uitleg:`<b>Zelfstandig naamwoord</b>: je kunt er de, het of een voor zetten (de hond). <b>Werkwoord</b>: wat iemand doet of is (zwemt). <b>Bijvoeglijk naamwoord</b>: zegt hoe iets is (mooie, koud).`,
   vb:`De <b>rode</b> bal → "rode" zegt hoe de bal is: bijvoeglijk naamwoord.`,
@@ -66,6 +66,28 @@ lesBank({id:"t-zinnetjes-3", vak:"taal", g:[3, 3], titel:"Korte zinnen begrijpen
     ["Noor pakt haar jas. Wat pakt Noor?", "Haar jas", ["Haar fiets", "Haar tas"], "Noor pakt haar jas."],
     ["De poes slaapt op de bank. Waar slaapt de poes?", "Op de bank", ["Onder de tafel", "In de boom"], "Op de bank vertelt waar de poes slaapt."],
     ["Ties geeft de plant water. Wat krijgt water?", "De plant", ["Het boek", "De stoel"], "Ties geeft water aan de plant."],
+    ["Mila zit op de fiets. Waar zit Mila op?", "De fiets", ["De bank", "De stoel"], "In de zin staat dat Mila op de fiets zit."],
+    ["Opa drinkt thee. Wat drinkt opa?", "Thee", ["Melk", "Sap"], "Opa drinkt thee."],
+    ["De vogel zit in de boom. Waar zit de vogel?", "In de boom", ["Op het dak", "In de kooi"], "Het woord in vertelt waar de vogel zit."],
+    ["Jip gooit de bal. Wat gooit Jip?", "De bal", ["De pop", "Het boek"], "Jip gooit de bal."],
+    ["De koe staat in de wei. Wie staat in de wei?", "De koe", ["Het paard", "De wei"], "De koe is het dier dat in de wei staat."],
+    ["Mama bakt een taart. Wie bakt een taart?", "Mama", ["Papa", "De taart"], "Mama doet het: zij bakt."],
+    ["Het is koud. Daarom doet Ali een muts op. Waarom doet Ali een muts op?", "Het is koud", ["Het is warm", "Hij is jarig"], "Daarom vertelt dat de kou de reden is."],
+    ["De muis zit achter de kast. Waar zit de muis?", "Achter de kast", ["Voor de kast", "Op de kast"], "Het woord achter vertelt waar de muis zit."],
+    ["Saar heeft een rode jas. Welke kleur heeft de jas?", "Rood", ["Blauw", "Geel"], "Saar heeft een rode jas."],
+    ["Bram rent naar huis. Waar rent Bram naartoe?", "Naar huis", ["Naar school", "Naar het bos"], "Bram rent naar huis."],
+    ["De zon schijnt. Lot gaat naar buiten. Wat doet Lot?", "Ze gaat naar buiten", ["Ze gaat slapen", "Ze gaat zwemmen in bad"], "Lot gaat naar buiten omdat de zon schijnt."],
+    ["Er zitten drie eieren in het nest. Hoeveel eieren zitten in het nest?", "Drie", ["Twee", "Vijf"], "In de zin staat drie eieren."],
+    ["Tim is blij. Hij krijgt een cadeau. Waarom is Tim blij?", "Hij krijgt een cadeau", ["Hij valt", "Het regent"], "Tim is blij om het cadeau."],
+    ["De juf schrijft op het bord. Wie schrijft er?", "De juf", ["Het bord", "De klas"], "De juf doet het: zij schrijft."],
+    ["Het paard eet een wortel. Wat eet het paard?", "Een wortel", ["Een appel", "Gras"], "In de zin staat een wortel."],
+    ["Eva slaapt in haar bed. Waar slaapt Eva?", "In haar bed", ["Op de bank", "In de tent"], "Eva slaapt in haar bed."],
+    ["De kikker springt in de sloot. Wat doet de kikker?", "Springen", ["Vliegen", "Zingen"], "De kikker springt."],
+    ["Kees en Ruben spelen met lego. Waarmee spelen ze?", "Met lego", ["Met een bal", "Met klei"], "Ze spelen met lego."],
+    ["De lamp is uit. Het is donker in de kamer. Waarom is het donker?", "De lamp is uit", ["De zon schijnt", "De deur is open"], "Omdat de lamp uit is, is het donker."],
+    ["Na school gaat Fien naar oma. Wanneer gaat Fien naar oma?", "Na school", ["Voor school", "In de nacht"], "Na school vertelt wanneer het gebeurt."],
+    ["De bus is vol. Mo moet staan. Waarom moet Mo staan?", "De bus is vol", ["Mo is moe", "De bus is leeg"], "Er is geen plek meer, want de bus is vol."],
+    ["Pip heeft een hond. De hond heet Max. Hoe heet de hond?", "Max", ["Pip", "Bas"], "Pip is het kind, Max is de hond."],
   ]});
 lesBank({id:"t-meervoud-4", vak:"taal", g:[4, 4], titel:"Eén en meer: meervouden",
   uitleg:"Een meervoud vertelt dat het om meer dan één gaat. Veel woorden krijgen en. Soms verandert de spelling: kat wordt katten en boom wordt bomen. Een korte klank krijgt vaak een dubbele medeklinker; een lange klank schrijf je in een open lettergreep met één klinker.",
@@ -81,6 +103,28 @@ lesBank({id:"t-meervoud-4", vak:"taal", g:[4, 4], titel:"Eén en meer: meervoude
     ["Wat is het meervoud van deur?", "deuren", ["deurren", "deure"], "Eén deur, twee deuren. Luister naar de klanken en kijk naar de spelling."],
     ["Wat is het meervoud van tas?", "tassen", ["tasen", "tassens"], "Eén tas, twee tassen. Luister naar de klanken en kijk naar de spelling."],
     ["Wat is het meervoud van stoel?", "stoelen", ["stoellen", "stoele"], "Eén stoel, twee stoelen. Luister naar de klanken en kijk naar de spelling."],
+    ["Wat is het meervoud van bal?", "ballen", ["balen", "bals"], "Eén bal, twee ballen. Korte a: dubbele l."],
+    ["Wat is het meervoud van been?", "benen", ["beenen", "bennen"], "Eén been, twee benen. Lange e: één e in benen."],
+    ["Wat is het meervoud van pen?", "pennen", ["penen", "pens"], "Eén pen, twee pennen. Korte e: dubbele n."],
+    ["Wat is het meervoud van muur?", "muren", ["muuren", "murren"], "Eén muur, twee muren. Lange uu: één u in muren."],
+    ["Wat is het meervoud van bus?", "bussen", ["busen", "buzen"], "Eén bus, twee bussen. Korte u: dubbele s."],
+    ["Wat is het meervoud van brief?", "brieven", ["briefen", "brievs"], "Eén brief, twee brieven. De f wordt een v."],
+    ["Wat is het meervoud van muis?", "muizen", ["muisen", "muisjes"], "Eén muis, twee muizen. De s wordt een z."],
+    ["Wat is het meervoud van fiets?", "fietsen", ["fietzen", "fiets"], "Eén fiets, twee fietsen."],
+    ["Wat is het meervoud van appel?", "appels", ["appelen", "appelens"], "Eén appel, twee appels. Woorden op -el krijgen vaak een s."],
+    ["Wat is het meervoud van auto?", "auto's", ["autos", "autoen"], "Eén auto, twee auto's. Na een o aan het eind schrijf je 's."],
+    ["Wat is het meervoud van oma?", "oma's", ["omas", "omaen"], "Eén oma, twee oma's. Na een a aan het eind schrijf je 's."],
+    ["Wat is het meervoud van jongen?", "jongens", ["jongenen", "jongen"], "Eén jongen, twee jongens. Woorden op -en krijgen vaak een s."],
+    ["Wat is het meervoud van taart?", "taarten", ["taarts", "tarten"], "Eén taart, twee taarten."],
+    ["Wat is het meervoud van slak?", "slakken", ["slaken", "slaks"], "Eén slak, twee slakken. Korte a: dubbele k."],
+    ["Wat is het meervoud van schaap?", "schapen", ["schaapen", "schappen"], "Eén schaap, twee schapen. Lange aa: één a in schapen."],
+    ["Wat is het meervoud van kind?", "kinderen", ["kinden", "kinds"], "Eén kind, twee kinderen. Dit is een uitzondering."],
+    ["Wat is het meervoud van ei?", "eieren", ["eien", "eis"], "Eén ei, twee eieren. Dit is een uitzondering."],
+    ["Wat is het meervoud van stad?", "steden", ["stadden", "stads"], "Eén stad, twee steden. Hier verandert de klank."],
+    ["Wat is het meervoud van schip?", "schepen", ["schippen", "schips"], "Eén schip, twee schepen. Hier verandert de klank."],
+    ["Wat is het meervoud van wolf?", "wolven", ["wolfen", "wolfs"], "Eén wolf, twee wolven. De f wordt een v."],
+    ["Wat is het enkelvoud van paarden?", "paard", ["paarde", "paarden"], "Eén paard, twee paarden."],
+    ["Wat is het enkelvoud van poten?", "poot", ["pot", "pote"], "Eén poot, twee poten. Lange oo, dus in het enkelvoud dubbel: poot."],
   ]});
 lesBank({id:"t-samenstelling-5", vak:"taal", g:[5, 5], titel:"Woorden aan elkaar",
   uitleg:"Een samenstelling bestaat uit twee of meer woorden. Je schrijft het nieuwe woord aan elkaar. Soms komen er tussenletters bij: zon en bril worden zonnebril. Leer de voorbeelden ook als hele woorden.",
@@ -98,6 +142,26 @@ lesBank({id:"t-samenstelling-5", vak:"taal", g:[5, 5], titel:"Woorden aan elkaar
     ["Welk samengesteld woord past bij hand en doek?", "handdoek", ["hand doek", "handoek"], "Je schrijft handdoek aan elkaar. Kijk ook goed naar eventuele tussenletters."],
     ["Welk samengesteld woord past bij speel en tuin?", "speeltuin", ["speel tuin", "speeltuyn"], "Je schrijft speeltuin aan elkaar. Kijk ook goed naar eventuele tussenletters."],
     ["Welk samengesteld woord past bij water en fles?", "waterfles", ["water fles", "waaterfles"], "Je schrijft waterfles aan elkaar. Kijk ook goed naar eventuele tussenletters."],
+    ["Welk samengesteld woord past bij brand en weer?", "brandweer", ["brand weer", "brantweer"], "Je schrijft brandweer aan elkaar."],
+    ["Welk samengesteld woord past bij kip en soep?", "kippensoep", ["kip soep", "kippesoep"], "Je schrijft kippensoep, met -en- ertussen."],
+    ["Welk samengesteld woord past bij zee en paard?", "zeepaard", ["zee paard", "zeeënpaard"], "Je schrijft zeepaard aan elkaar."],
+    ["Welk samengesteld woord past bij keuken en tafel?", "keukentafel", ["keuken tafel", "keukenstafel"], "Je schrijft keukentafel aan elkaar."],
+    ["Welk samengesteld woord past bij tand en borstel?", "tandenborstel", ["tand borstel", "tandeborstel"], "Je schrijft tandenborstel, met -en- ertussen."],
+    ["Welk samengesteld woord past bij boom en hut?", "boomhut", ["boom hut", "bomenhut"], "Je schrijft boomhut aan elkaar."],
+    ["Welk samengesteld woord past bij sneeuw en pop?", "sneeuwpop", ["sneeuw pop", "sneeuwenpop"], "Je schrijft sneeuwpop aan elkaar."],
+    ["Welk samengesteld woord past bij brood en trommel?", "broodtrommel", ["brood trommel", "brootrommel"], "Je schrijft broodtrommel aan elkaar. Let op: twee keer een medeklinker."],
+    ["Welk samengesteld woord past bij huis en werk?", "huiswerk", ["huis werk", "huizewerk"], "Je schrijft huiswerk aan elkaar."],
+    ["Welk samengesteld woord past bij appel en taart?", "appeltaart", ["appel taart", "appelstaart"], "Je schrijft appeltaart aan elkaar."],
+    ["Welk samengesteld woord past bij paard en staart?", "paardenstaart", ["paard staart", "paardestaart"], "Je schrijft paardenstaart, met -en- ertussen."],
+    ["Welk samengesteld woord past bij zwem en bad?", "zwembad", ["zwem bad", "zwemmenbad"], "Je schrijft zwembad aan elkaar."],
+    ["Welk samengesteld woord past bij kerst en boom?", "kerstboom", ["kerst boom", "kerstenboom"], "Je schrijft kerstboom aan elkaar."],
+    ["Welk samengesteld woord past bij ijs en beer?", "ijsbeer", ["ijs beer", "ijzebeer"], "Je schrijft ijsbeer aan elkaar."],
+    ["Welk samengesteld woord past bij post en bode?", "postbode", ["post bode", "posbode"], "Je schrijft postbode aan elkaar."],
+    ["Welk samengesteld woord past bij melk en fles?", "melkfles", ["melk fles", "melkenfles"], "Je schrijft melkfles aan elkaar."],
+    ["Uit welke twee woorden bestaat verjaardagstaart?", "verjaardag en taart", ["ver en jaardagstaart", "verjaar en dagstaart"], "Tussen verjaardag en taart staat een tussen-s."],
+    ["Uit welke twee woorden bestaat zandkasteel?", "zand en kasteel", ["zan en dkasteel", "zandkas en teel"], "Zand + kasteel = zandkasteel."],
+    ["Welk woord is goed geschreven?", "speelgoedwinkel", ["speelgoed winkel", "speel goedwinkel"], "Een samenstelling schrijf je aan elkaar."],
+    ["Welk woord is goed geschreven?", "voetbalveld", ["voetbal veld", "voet balveld"], "Voetbal + veld schrijf je aan elkaar: voetbalveld."],
   ]});
 lesBank({id:"t-onderwerp-6", vak:"taal", g:[6, 6], titel:"Het onderwerp van een zin",
   uitleg:"Het onderwerp vertelt wie of wat iets doet of is. Zoek eerst de persoonsvorm. Vraag dan wie of wat plus die persoonsvorm. Het onderwerp staat niet altijd aan het begin.",
@@ -115,6 +179,26 @@ lesBank({id:"t-onderwerp-6", vak:"taal", g:[6, 6], titel:"Het onderwerp van een 
     ["Wat is het onderwerp in: Oma en opa wandelen samen.", "Oma en opa", ["wandelen", "samen"], "Vraag wie of wat de handeling doet. Het onderwerp is: Oma en opa."],
     ["Wat is het onderwerp in: Ik schrijf een brief.", "Ik", ["schrijf", "een brief"], "Vraag wie of wat de handeling doet. Het onderwerp is: Ik."],
     ["Wat is het onderwerp in: Een kleine vogel bouwt een nest.", "Een kleine vogel", ["bouwt", "een nest"], "Vraag wie of wat de handeling doet. Het onderwerp is: Een kleine vogel."],
+    ["Wat is het onderwerp in: Gisteren won ons team de wedstrijd.", "ons team", ["Gisteren", "de wedstrijd"], "Wie won? Ons team."],
+    ["Wat is het onderwerp in: De leerkracht deelt de schriften uit.", "De leerkracht", ["de schriften", "deelt"], "Wie deelt uit? De leerkracht."],
+    ["Wat is het onderwerp in: Na de pauze begint de rekenles.", "de rekenles", ["Na de pauze", "begint"], "Wat begint? De rekenles."],
+    ["Wat is het onderwerp in: Jullie maken veel lawaai.", "Jullie", ["maken", "veel lawaai"], "Wie maken lawaai? Jullie."],
+    ["Wat is het onderwerp in: Het oude kasteel staat op een heuvel.", "Het oude kasteel", ["staat", "op een heuvel"], "Wat staat op een heuvel? Het oude kasteel."],
+    ["Wat is het onderwerp in: Over de weg rijdt een tractor.", "een tractor", ["Over de weg", "rijdt"], "Wat rijdt? Een tractor."],
+    ["Wat is het onderwerp in: Mijn broertje en ik bouwen een hut.", "Mijn broertje en ik", ["bouwen", "een hut"], "Wie bouwen? Mijn broertje en ik."],
+    ["Wat is het onderwerp in: Zij heeft een nieuwe fiets.", "Zij", ["heeft", "een nieuwe fiets"], "Wie heeft? Zij."],
+    ["Wat is het onderwerp in: Elke ochtend fluit de merel in de tuin.", "de merel", ["Elke ochtend", "in de tuin"], "Wie fluit? De merel."],
+    ["Wat is de persoonsvorm in: De kat ligt in de zon.", "ligt", ["De kat", "in de zon"], "Maak de zin vragend: Ligt de kat in de zon? Het woord dat vooraan komt is de persoonsvorm."],
+    ["Wat is de persoonsvorm in: Wij gaan morgen naar zee.", "gaan", ["Wij", "morgen"], "Verander de tijd: Wij gingen... Het woord dat verandert is de persoonsvorm."],
+    ["Wat is de persoonsvorm in: Lisa heeft haar huiswerk af.", "heeft", ["Lisa", "af"], "Maak de zin vragend: Heeft Lisa haar huiswerk af?"],
+    ["Wat is het onderwerp in: Op zaterdag gaat Daan naar voetbal.", "Daan", ["Op zaterdag", "gaat"], "Wie gaat? Daan."],
+    ["Wat is het onderwerp in: De bakker verkoopt vers brood.", "De bakker", ["vers brood", "verkoopt"], "Wie verkoopt? De bakker."],
+    ["Wat is het onderwerp in: Uit de lucht vallen dikke druppels.", "dikke druppels", ["Uit de lucht", "vallen"], "Wat valt? Dikke druppels."],
+    ["Wat is het onderwerp in: Het kleine meisje lacht.", "Het kleine meisje", ["lacht", "kleine"], "Wie lacht? Het kleine meisje."],
+    ["Wat is het onderwerp in: Morgen speel ik bij Sem.", "ik", ["Morgen", "bij Sem"], "Wie speelt? Ik."],
+    ["Wat is het onderwerp in: De zon schijnt fel.", "De zon", ["schijnt", "fel"], "Wat schijnt? De zon."],
+    ["Waarom is 'buiten' geen onderwerp in: Buiten spelen de kinderen?", "Het vertelt waar, niet wie iets doet", ["Het staat vooraan", "Het is te kort"], "Wie spelen? De kinderen. Buiten vertelt alleen waar."],
+    ["Wat is het onderwerp in: In de klas hangt een grote kaart.", "een grote kaart", ["In de klas", "hangt"], "Wat hangt? Een grote kaart."],
   ]});
 lesBank({id:"t-hoofdgedachte-7", vak:"taal", g:[7, 7], titel:"De hoofdgedachte vinden",
   uitleg:"De hoofdgedachte is het belangrijkste dat een tekst over het onderwerp zegt. Lees de hele tekst. Kies de zin die de kern samenvat; een los detail is meestal niet genoeg.",
@@ -132,6 +216,24 @@ lesBank({id:"t-hoofdgedachte-7", vak:"taal", g:[7, 7], titel:"De hoofdgedachte v
     ["Welke hoofdgedachte past bij deze tekst? Een trein kan veel reizigers tegelijk vervoeren. Stations verbinden steden en dorpen.", "Treinen verbinden plaatsen en vervoeren veel mensen.", ["Treinen rijden zonder route overal heen.", "Stations zijn alleen winkels."], "De hoofdgedachte vat het belangrijkste van de hele tekst samen: Treinen verbinden plaatsen en vervoeren veel mensen."],
     ["Welke hoofdgedachte past bij deze tekst? Bij een proefje verander je liefst één ding tegelijk. Dan kun je beter onderzoeken waardoor een verschil ontstaat.", "Eén verandering tegelijk helpt een proefje eerlijk te vergelijken.", ["Verander altijd alles tegelijk.", "Bij proefjes hoef je nooit te kijken."], "De hoofdgedachte vat het belangrijkste van de hele tekst samen: Eén verandering tegelijk helpt een proefje eerlijk te vergelijken."],
     ["Welke hoofdgedachte past bij deze tekst? Een verhaal kan vanuit verschillende personen verteld worden. Daardoor lees je verschillende gedachten en ervaringen.", "Het vertelperspectief beïnvloedt wat je te weten komt.", ["Elke verteller weet altijd alles.", "Alle verhalen hebben precies dezelfde verteller."], "De hoofdgedachte vat het belangrijkste van de hele tekst samen: Het vertelperspectief beïnvloedt wat je te weten komt."],
+    ["Welke hoofdgedachte past bij deze tekst? Bijen vliegen van bloem naar bloem. Zo nemen ze stuifmeel mee. Daardoor kunnen planten vruchten maken.", "Bijen helpen planten om vruchten te maken.", ["Bijen houden niet van bloemen.", "Planten hebben geen stuifmeel."], "De hele tekst gaat over hoe bijen planten helpen."],
+    ["Welke hoofdgedachte past bij deze tekst? Wie genoeg slaapt, kan zich beter concentreren. Ook word je minder snel ziek.", "Genoeg slaap is goed voor je.", ["Slapen maakt je ziek.", "Concentreren kan alleen 's nachts."], "De tekst noemt twee voordelen van genoeg slaap."],
+    ["Welke hoofdgedachte past bij deze tekst? Vroeger schreven kinderen op een lei. Die kon je steeds schoonvegen. Papier was namelijk duur.", "Kinderen schreven vroeger op een lei omdat papier duur was.", ["Papier was vroeger gratis.", "Een lei kon je maar één keer gebruiken."], "De kern: een lei in plaats van duur papier."],
+    ["Welke hoofdgedachte past bij deze tekst? Een hond heeft elke dag beweging nodig. Ook moet je hem voer, water en aandacht geven.", "Een hond heeft elke dag verzorging nodig.", ["Een hond heeft niets nodig.", "Honden drinken nooit."], "De tekst noemt verschillende dingen die een hond dagelijks nodig heeft."],
+    ["Welke hoofdgedachte past bij deze tekst? In Nederland liggen veel dijken. Ze beschermen het land tegen het water van zee en rivieren.", "Dijken beschermen Nederland tegen water.", ["Dijken maken het land natter.", "Nederland heeft geen rivieren."], "De kern van de tekst is de beschermende taak van dijken."],
+    ["Welke hoofdgedachte past bij deze tekst? Oud papier kan opnieuw gebruikt worden. Van gerecycled papier maak je bijvoorbeeld nieuwe dozen.", "Oud papier kun je recyclen.", ["Papier kun je nooit hergebruiken.", "Dozen zijn van plastic."], "De tekst gaat over het hergebruiken van papier."],
+    ["Welke zin is een detail en niet de hoofdgedachte? Tekst: Muizen zijn kleine knaagdieren. Ze hebben scherpe tanden. Ze leven bijna overal ter wereld.", "Ze hebben scherpe tanden.", ["Muizen zijn kleine knaagdieren die bijna overal leven.", "De tekst gaat over muizen."], "Scherpe tanden is maar één klein stukje informatie."],
+    ["Welke hoofdgedachte past bij deze tekst? Water drinken is belangrijk. Je lichaam bestaat voor een groot deel uit water. Als je te weinig drinkt, kun je hoofdpijn krijgen.", "Water drinken is belangrijk voor je lichaam.", ["Hoofdpijn komt altijd door water.", "Je lichaam heeft geen water nodig."], "De tekst legt uit waarom water drinken belangrijk is."],
+    ["Welke hoofdgedachte past bij deze tekst? Op de markt kun je groente, fruit en kaas kopen. Vaak komt het eten van boeren uit de buurt.", "Op de markt koop je verse producten, vaak uit de buurt.", ["Op de markt verkopen ze alleen kleding.", "Boeren gaan nooit naar de markt."], "De kern: wat je op de markt koopt en waar het vandaan komt."],
+    ["Welke hoofdgedachte past bij deze tekst? Een vulkaan is een berg met een opening. Soms komt er hete, vloeibare steen uit. Dat noemen we lava.", "Uit een vulkaan kan lava komen.", ["Vulkanen zijn altijd koud.", "Lava is een soort water."], "De tekst legt uit wat een vulkaan is en wat eruit komt."],
+    ["Welke hoofdgedachte past bij deze tekst? In de herfst vallen de bladeren van veel bomen. Zo besparen bomen water en energie in de winter.", "Bomen laten in de herfst hun bladeren vallen om de winter door te komen.", ["Bomen groeien in de herfst het hardst.", "Bladeren vallen alleen in de zomer."], "De kern verbindt het vallen van de bladeren met de winter."],
+    ["Welke titel past het best bij een tekst over hoe je veilig de straat oversteekt?", "Veilig oversteken", ["Mijn nieuwe fiets", "Het weer van morgen"], "Een goede titel past bij de hoofdgedachte."],
+    ["Welke hoofdgedachte past bij deze tekst? Pinguïns kunnen niet vliegen. Maar ze zwemmen wel heel snel en duiken diep om vis te vangen.", "Pinguïns kunnen niet vliegen, maar zijn goede zwemmers.", ["Pinguïns vliegen naar het zuiden.", "Pinguïns eten geen vis."], "De tekst zet niet kunnen vliegen tegenover goed zwemmen."],
+    ["Welke hoofdgedachte past bij deze tekst? Een moestuin geeft groente. Ook leer je hoe planten groeien en is het fijn om buiten bezig te zijn.", "Een moestuin heeft verschillende voordelen.", ["Een moestuin is alleen voor bloemen.", "Buiten zijn is niet fijn."], "De tekst noemt meerdere voordelen."],
+    ["Welke hoofdgedachte past bij deze tekst? Vroeger duurde een brief dagen. Nu stuur je in een seconde een bericht met je telefoon.", "Berichten versturen gaat nu veel sneller dan vroeger.", ["Brieven bestaan niet meer.", "Telefoons zijn langzamer dan brieven."], "De kern is de vergelijking tussen vroeger en nu."],
+    ["Welke hoofdgedachte past bij deze tekst? Spelletjes spelen met anderen leert je samenwerken. Je leert ook tegen je verlies te kunnen.", "Samen spelletjes spelen leert je sociale dingen.", ["Je kunt alleen leren van boeken.", "Spelletjes zijn altijd saai."], "De tekst noemt wat je leert van samen spelen."],
+    ["Waar staat de hoofdgedachte van een tekst vaak?", "In de eerste of de laatste alinea", ["Altijd in de titel", "Alleen in het midden van een zin"], "Kijk vooral naar het begin en het eind van een tekst."],
+    ["Welke hoofdgedachte past bij deze tekst? Een fietshelm beschermt je hoofd als je valt. In veel landen dragen kinderen daarom een helm.", "Een fietshelm beschermt je hoofd.", ["Helmen zijn alleen voor volwassenen.", "Een helm maakt fietsen gevaarlijker."], "De tekst gaat over de bescherming van een helm."],
   ]});
 lesBank({id:"t-verbanden-8", vak:"taal", g:[8, 8], titel:"Verbindingswoorden en tekstverbanden",
   uitleg:"Verbindingswoorden leggen een verband tussen zinnen. Want en omdat geven een reden; dus een gevolg; maar en hoewel een tegenstelling; zodat een doel. Voordat en nadat geven volgorde aan. Kijk ook of de woordvolgorde klopt.",
@@ -149,4 +251,24 @@ lesBank({id:"t-verbanden-8", vak:"taal", g:[8, 8], titel:"Verbindingswoorden en 
     ["Welk verbindingswoord past? We vertrekken ... iedereen klaar is.", "zodra", ["want", "maar"], "Zodra betekent meteen op het moment dat."],
     ["Welk verbindingswoord past? Ik zet een wekker, ... ik op tijd wakker word.", "zodat", ["hoewel", "of"], "Zodat geeft een doel aan."],
     ["Welk verbindingswoord past? ... we hadden gegeten, ruimden we op.", "Nadat", ["Voordat", "Terwijl"], "Nadat geeft aan dat het eten al voorbij was."],
+    ["Welk verbindingswoord past? Ik ben te laat, ... de bus had vertraging.", "want", ["dus", "maar"], "Want geeft een reden."],
+    ["Welk verbindingswoord past? Het was glad, ... we fietsten heel voorzichtig.", "dus", ["want", "of"], "Dus geeft een gevolg."],
+    ["Welk verbindingswoord past? Wil je thee ... wil je limonade?", "of", ["want", "omdat"], "Of geeft een keuze."],
+    ["Welk verbindingswoord past? ... het druk was, vonden we toch een plekje.", "Hoewel", ["Omdat", "Zodat"], "Hoewel geeft een tegenstelling met wat je verwacht."],
+    ["Welk verbindingswoord past? Hij oefent elke dag, ... hij beter wordt.", "zodat", ["hoewel", "of"], "Zodat geeft een doel aan."],
+    ["Welk verbindingswoord past? Ze kon niet komen, ... ze was ziek.", "want", ["dus", "of"], "Want geeft de reden."],
+    ["Welk verbindingswoord past? ... je de deur uitgaat, moet je je jas aantrekken.", "Voordat", ["Nadat", "Omdat"], "Voordat geeft aan wat eerst moet."],
+    ["Welk verbindingswoord past? Ik help je, ... jij mij ook helpt.", "als", ["want", "dus"], "Als geeft een voorwaarde."],
+    ["Welk verbindingswoord past? Hij is heel sterk, ... hij is ook lief.", "en", ["of", "dus"], "En voegt iets toe."],
+    ["Welk verbindingswoord past? ... de film was afgelopen, gingen we naar huis.", "Toen", ["Want", "Hoewel"], "Toen geeft aan wanneer het gebeurde."],
+    ["Welk verband geeft 'daardoor'?", "Een gevolg", ["Een tegenstelling", "Een keuze"], "Daardoor vertelt wat er het gevolg van is."],
+    ["Welk verband geeft 'bijvoorbeeld'?", "Een voorbeeld", ["Een reden", "Een tijd"], "Na bijvoorbeeld volgt een voorbeeld."],
+    ["Welk verband geeft 'ten eerste ... ten tweede'?", "Een opsomming", ["Een tegenstelling", "Een voorwaarde"], "Met ten eerste en ten tweede som je dingen op."],
+    ["Welk verband geeft 'daarentegen'?", "Een tegenstelling", ["Een gevolg", "Een opsomming"], "Daarentegen zet twee dingen tegenover elkaar."],
+    ["Welk verband geeft 'kortom'?", "Een samenvatting of conclusie", ["Een voorbeeld", "Een reden"], "Na kortom volgt een korte samenvatting."],
+    ["Welke zin is goed?", "Omdat het regent, blijf ik binnen.", ["Omdat het regent, ik blijf binnen.", "Omdat regent het, blijf ik binnen."], "Na een bijzin met omdat volgt eerst het werkwoord: blijf ik."],
+    ["Welke zin is goed?", "Ik blijf binnen, want het regent.", ["Ik blijf binnen, want regent het.", "Ik blijf binnen, want het regent niet buiten binnen."], "Na want blijft de gewone woordvolgorde: het regent."],
+    ["Welk verbindingswoord past? Ik had honger, ... ik at een boterham.", "dus", ["want", "hoewel"], "Dus geeft het gevolg van de honger."],
+    ["Welk verband geeft 'eerst ... daarna ... ten slotte'?", "Een volgorde in tijd", ["Een tegenstelling", "Een keuze"], "Deze woorden zetten stappen in de juiste volgorde."],
+    ["Welk verbindingswoord past? ... je goed oefent, word je vanzelf beter.", "Als", ["Maar", "Of"], "Als geeft een voorwaarde."],
   ]});

@@ -12,7 +12,10 @@ function mapSpots(p, w){
     {k:'team', act:'team', naam:WD.huis, sub:'Je monsters'},
     {k:'kampioen', act:'champ', naam:'Kampioen', sub:'Eindbaas', locked:!champ, lockTxt:'win eerst alle badges', done:!!p.badges['champ-'+w]}]);
 }
-function spotPos(k){ const h = KAART_PLEKKEN[k]; return h ? {x:h.x, y:Math.min(97, h.by + 1)} : KAART_PLEIN; }
+/* De trainer staat naast het gebouw (niet op het naambordje): rechts ervan, of links als er rechts geen plek is. */
+function spotPos(k){ const h = KAART_PLEKKEN[k]; if(!h) return KAART_PLEIN;
+  const opzij = h.w/2 + 4; const x = h.x + opzij <= 95 ? h.x + opzij : h.x - opzij;
+  return {x, y:Math.min(98, h.by)}; }
 function vMap(){
   const p = P(); const w = W(); const WD = WORLDS[w]; const m = act(p); const ml = levelInfo(m.xp); const st = mStage(m); const ev = evoLevels(m.id);
   const nextEvo = ev[st-1];
