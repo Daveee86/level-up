@@ -17,6 +17,9 @@ function render(){
 /* ---------------- Acties ---------------- */
 document.addEventListener('input', e => { if(e.target.id==='cname' && view.c) view.c.name = e.target.value; });
 document.addEventListener('change', e => { const t=e.target; const p=S.profiles.find(x=>x.id===t.dataset.id);
+  if(t.dataset.geb){ const f=t.dataset.geb, v=t.value?+t.value:null;
+    if(t.dataset.cgeb && view.c){ view.c.geb = view.c.geb || {}; view.c.geb[f] = v; return; }
+    if(p){ p.geb = Object.assign({}, p.geb||{}, {[f]:v}); if(!p.geb.d && !p.geb.m && !p.geb.j) delete p.geb; save(); render(); return; } }
   if(t.dataset.chg==='groep' && p){ p.groep=+t.value; save(); render(); }
   if(t.dataset.chg==='coins' && p){ const v=Math.floor(Number(t.value)); if(Number.isFinite(v) && v>=0){ p.coins=v; save(); } render(); } });
 document.addEventListener('keydown', e => { if(e.key==='Enter' && e.target.id==='opw'){ e.preventDefault(); checkOuderPw(); } });
@@ -47,9 +50,10 @@ document.addEventListener('click', e => {
       const c=view.c; c.name=(document.getElementById('cname')?.value||'').trim();
       if(!c.name){ view.msg='Vul eerst je naam in.'; render(); break; }
       if(!c.gender){ view.msg='Kies jongen of meisje.'; render(); break; }
+      if(!c.geb || !c.geb.d || !c.geb.m || !c.geb.j){ view.msg='Kies wanneer je jarig bent: dag, maand en jaar.'; render(); break; }
       if(!c.groep){ view.msg='Kies je groep.'; render(); break; }
       if(c.pw.length<3){ view.msg='Kies 3 geheime plaatjes.'; render(); break; }
-      const np = {id:'p'+Date.now(), v:4, name:c.name, gender:c.gender, tr:c.tr, groep:c.groep, pw:c.pw.slice(), coins:30, txp:0,
+      const np = {id:'p'+Date.now(), v:4, name:c.name, gender:c.gender, tr:c.tr, groep:c.groep, pw:c.pw.slice(), geb:{d:c.geb.d, m:c.geb.m, j:c.geb.j}, coins:30, txp:0,
         mons:[{u:'m'+Date.now(), id:c.starter, xp:0}], act:null, items:{heal:1,hint:1}, badges:{}, seen:[c.starter], luck:0, lessons:{}, log:[]};
       np.act = np.mons[0].u; S.profiles.push(np); save(); me=np.id; go({s:'map'}); break; }
     case 'logout': me=null; go({s:'login'}); break;

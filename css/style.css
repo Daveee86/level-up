@@ -380,3 +380,10 @@ img.evico{display:inline-block;width:22px;vertical-align:-4px}
 @keyframes valt{0%{top:-6%;transform:translateX(0) rotate(0)}50%{transform:translateX(12px) rotate(180deg)}100%{top:104%;transform:translateX(0) rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){.valt{display:none}}
 .evprijs{width:96px}.evprijs img{width:100%}
+body.ev-maarten{--accent:#e8741c;--accent-sh:#a44f0c;--accent-soft:#fff0e0;--on-accent:#fff;--bg:#f3ebe2;--soft:#f3ebe2}
+body.w3.ev-maarten{--accent:#ff9a3d;--accent-sh:#a85a14;--accent-soft:#3a2410;--on-accent:#1b0d02}
+.evbanner.jarig{border-color:#ff7fb4;background:linear-gradient(90deg,#fff0f6,var(--card))}
+.w3 .evbanner.jarig{background:linear-gradient(90deg,#3a1530,var(--card))}
+.valt.stijgt img{animation-name:stijgt}
+@keyframes stijgt{0%{top:104%;transform:translateX(0)}50%{transform:translateX(-10px)}100%{top:-10%;transform:translateX(0)}}
+.gebrij select{font:inherit;padding:6px 8px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink)}

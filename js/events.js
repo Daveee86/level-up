@@ -32,20 +32,48 @@ function openCadeau(p){
   confetti();
 }
 
+/* ---- verjaardag (p.geb = {d, m, j}, m = 1..12) ---- */
+function isJarig(p, nu=new Date()){ const g = p.geb; if(!g) return false;
+  const schrikkel = y => (y%4===0 && y%100!==0) || y%400===0;
+  let d = g.d, m = g.m; if(d===29 && m===2 && !schrikkel(nu.getFullYear())) d = 28;   // 29 februari: in andere jaren op 28 februari
+  return nu.getDate()===d && nu.getMonth()+1===m; }
+function leeftijd(p, nu=new Date()){ const g = p.geb; if(!g || !g.j) return null;
+  let a = nu.getFullYear() - g.j; if(nu.getMonth()+1 < g.m || (nu.getMonth()+1===g.m && nu.getDate() < g.d)) a--; return a; }
+function jarigCadeauKlaar(p){ return isJarig(p) && p.jarigJaar !== new Date().getFullYear(); }
+function openJarigCadeau(p){
+  if(!jarigCadeauKlaar(p)) return;
+  p.jarigJaar = new Date().getFullYear(); p.coins += JARIG_CADEAU.munten; p.items[JARIG_CADEAU.item] = (p.items[JARIG_CADEAU.item]||0) + 1; save();
+  const it = ITEM[JARIG_CADEAU.item];
+  overlay(`<div class="lvbox" role="dialog" aria-label="Verjaardagscadeau"><div class="label">Hieperdepiep!</div><div class="lvbig" style="font-size:30px">Gefeliciteerd, ${esc(p.name)}!</div>
+    <div class="evprijs">${itImg(it.icon)}</div><p style="margin:0;font-weight:700;font-size:20px">🪙 ${JARIG_CADEAU.munten} munten en een ${it.naam}</p><button class="btn sun" id="lvok">Dankjewel!</button></div>`);
+  confetti();
+}
+function gebTekst(g){ return g ? `${g.d} ${MAANDEN[g.m-1]} ${g.j||''}`.trim() : 'nog niet ingevuld'; }
+function gebKiezers(g, extra){   // drie keuzelijsten: dag, maand, jaar
+  const jaar = new Date().getFullYear(); const sel = (f, opts) => `<select data-geb="${f}" ${extra} aria-label="${f==='d'?'dag':f==='m'?'maand':'jaar'}"><option value="">${f==='d'?'dag':f==='m'?'maand':'jaar'}</option>${opts}</select>`;
+  return sel('d', Array.from({length:31},(_,i)=>`<option value="${i+1}" ${g&&g.d===i+1?'selected':''}>${i+1}</option>`).join(''))
+    + sel('m', MAANDEN.map((n,i)=>`<option value="${i+1}" ${g&&g.m===i+1?'selected':''}>${n}</option>`).join(''))
+    + sel('j', Array.from({length:12},(_,i)=>jaar-4-i).map(y=>`<option value="${y}" ${g&&g.j===y?'selected':''}>${y}</option>`).join(''));
+}
+
 /* ---- wat het kind ziet ---- */
 function evBanners(p){
   const e = evActief(); let h = '';
+  if(isJarig(p)){ const a = leeftijd(p);
+    h += `<div class="evbanner jarig"><img class="px" src="${asset('assets/events/taart.png')}" alt=""><b>Gefeliciteerd, ${esc(p.name)}!${a?` Je bent vandaag ${a} jaar!`:''}</b>
+    ${jarigCadeauKlaar(p) ? `<button class="btn sun" data-act="evjarig">Pak je verjaardagscadeau uit</button>` : `<span class="muted">Fijne verjaardag! 🎉</span>`}</div>`; }
   if(e) h += `<div class="evbanner"><img class="px" src="${asset(e.icoon)}" alt=""><b>${e.banner}</b>
     ${e.cadeau ? (cadeauKlaar(p) ? `<button class="btn sun" data-act="evcadeau">${e.cadeau.knop}</button>` : `<span class="muted">${e.cadeau.morgen}</span>`) : ''}</div>`;
   if(happyAan()){ const o = happyOver(p);
     h += `<div class="evbanner hh"><b>⚡ Happy hour!</b><span>${o ? `Dubbele munten voor je volgende ${o===1?'gevecht':o+' gevechten'}.` : 'Je hebt al je happy-hour-gevechten gebruikt.'}</span></div>`; }
   return h;
 }
-function evVallen(){
-  const e = evActief(); if(!e || !e.vallen) return '';
+function evVallen(p){
+  const jarig = p && isJarig(p); const e = evActief();
+  const img = jarig ? 'assets/events/ballon.png' : (e && e.vallen); if(!img) return '';
   let h = ''; for(let i=0;i<16;i++){ const x = (i*6.3 + (i%3)*2.1) % 98, dur = 7 + (i*37 % 50)/10, del = -((i*53) % 90)/10, sz = 1.6 + (i%4)*0.4;
-    h += `<img src="${asset(e.vallen)}" alt="" style="left:${x}%;width:${sz}%;animation-duration:${dur}s;animation-delay:${del}s">`; }
-  return `<div class="valt" aria-hidden="true">${h}</div>`;
+    h += `<img src="${asset(img)}" alt="" style="left:${x}%;width:${sz}%;animation-duration:${dur}s;animation-delay:${del}s">`; }
+  return `<div class="valt${jarig?' stijgt':''}" aria-hidden="true">${h}</div>`;
 }
 
 /* ---- ouderscherm ---- */
@@ -71,6 +99,7 @@ function evAction(a, d){
   if(a==='evset'){ ev.actief = d.k || null; save(); render(); return true; }
   if(a==='hhon'){ const n = Math.floor(Number(document.getElementById('hhmax')?.value)); ev.happy = {id:Date.now(), max: Number.isFinite(n) && n>0 ? Math.min(n,50) : HAPPY_STANDAARD}; save(); render(); return true; }
   if(a==='hhoff'){ ev.happy = null; save(); render(); return true; }
+  if(a==='evjarig'){ const p = P(); if(p) openJarigCadeau(p); return true; }
   if(a==='evcadeau'){ const p = P(); if(p) openCadeau(p); return true; }
   return false;
 }

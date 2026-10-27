@@ -22,10 +22,10 @@ function vLogin(){
     ${evActief()?`<div class="evbanner"><img class="px" src="${asset(evActief().icoon)}" alt=""><b>${evActief().banner}</b></div>`:''}
     <h2 style="font-size:26px;margin-bottom:12px">Wie gaat er spelen?</h2>
     <div class="tiles">
-      ${S.profiles.map(p=>{ const m=act(p); return `<button class="ptile" data-act="pick" data-id="${p.id}"><div class="duo">${trImg(p.tr,'tr')}${m?monImg(m,'f','').replace('<img','<img style="width:70px"'):''}</div><b>${esc(p.name)}</b><span class="muted">Level ${levelInfo(p.txp).lvl} · ${p.mons.length} monster${p.mons.length===1?'':'s'}</span><span class="muted" style="font-size:13px">Groep ${p.groep}</span>${p.demo?'<span class="badge">voorbeeld</span>':''}</button>`; }).join('')}
+      ${S.profiles.map(p=>{ const m=act(p); return `<button class="ptile" data-act="pick" data-id="${p.id}"><div class="duo">${trImg(p.tr,'tr')}${m?monImg(m,'f','').replace('<img','<img style="width:70px"'):''}</div><b>${esc(p.name)}${isJarig(p)?' 🎂':''}</b><span class="muted">Level ${levelInfo(p.txp).lvl} · ${p.mons.length} monster${p.mons.length===1?'':'s'}</span><span class="muted" style="font-size:13px">Groep ${p.groep}</span>${p.demo?'<span class="badge">voorbeeld</span>':''}</button>`; }).join('')}
       <button class="ptile add" data-act="create"><span class="plus">+</span>Nieuwe speler</button>
     </div>
-    <p style="margin-top:24px"><button class="btn ghost" data-act="ouders">Voor ouders</button></p>
+    <p style="margin-top:24px"><button class="btn ghost" data-act="ouders">Admin</button></p>
     <p class="muted" style="font-size:13px;margin-top:20px;max-width:62ch">Monsters, trainers en icoontjes: <a href="https://wiki.tuxemon.org" target="_blank" rel="noopener" style="color:var(--link)">Tuxemon</a>-project, CC BY-SA 4.0. Met dank aan alle makers.</p>
   </div>`;
 }
@@ -49,7 +49,7 @@ function evoRow(id, reached){
 }
 
 function vCreate(){
-  const c = view.c || (view.c = {name:'', gender:null, tr:null, groep:null, starter:STARTERS[0], pw:[]});
+  const c = view.c || (view.c = {name:'', gender:null, tr:null, geb:{}, groep:null, starter:STARTERS[0], pw:[]});
   return `<div class="wrap">
     <button class="back" data-act="home0">← Terug</button>
     <div class="panel intro" style="margin-bottom:18px">${trImg('prof','big-tr')}<div><div class="label">Professor Pixel</div><h1 style="font-size:30px;margin:4px 0 6px">Welkom, nieuwe trainer!</h1><p class="muted" style="margin:0">Vertel me wie je bent en kies je eerste monster. Andere monsters kun je later kopen met munten die je verdient door te leren.</p></div></div>
@@ -58,13 +58,15 @@ function vCreate(){
       <div class="panel"><div class="label" style="margin-bottom:8px">2 · Ben je een jongen of een meisje?</div>
         <div class="chips">${[['b','Jongen'],['g','Meisje']].map(([g,n])=>`<button class="chip ${c.gender===g?'on':''}" data-act="cgen" data-g="${g}">${n}</button>`).join('')}</div>
         ${c.gender?`<div class="label" style="margin:14px 0 8px">Kies hoe je eruitziet</div><div class="animals">${SPELER_LOOKS[c.gender].map(k=>`<button class="${c.tr===k?'on':''}" data-act="ctr" data-k="${k}">${trImg(k)}</button>`).join('')}</div>`:''}</div>
-      <div class="panel"><div class="label" style="margin-bottom:8px">3 · In welke groep zit je?</div>
+      <div class="panel"><div class="label" style="margin-bottom:8px">3 · Wanneer ben je jarig?</div>
+        <div class="row gebrij">${gebKiezers(c.geb, 'data-cgeb="1"')}</div><p class="muted" style="margin:8px 0 0;font-size:14px">Op je verjaardag krijg je een feestje in de wereld!</p></div>
+      <div class="panel"><div class="label" style="margin-bottom:8px">4 · In welke groep zit je?</div>
         <div class="chips">${GROEPEN.map(g=>`<button class="chip ${c.groep===g?'on':''}" data-act="cg" data-g="${g}">Groep ${g}</button>`).join('')}</div>
         ${c.groep?`<p class="muted" style="margin:10px 0 0">Jij speelt in de wereld <b>${WORLDS[worldOf(c.groep)].naam}</b>.</p>`:''}</div>
-      <div class="panel"><div class="label" style="margin-bottom:8px">4 · Kies je eerste monster</div>
+      <div class="panel"><div class="label" style="margin-bottom:8px">5 · Kies je eerste monster</div>
         <div class="animals">${STARTERS.map(id=>`<button class="${c.starter===id?'on':''}" data-act="cst" data-id="${id}">${sprite(MON[id].spr[0])}${MON[id].names[0]}<small>${MON[id].el}</small></button>`).join('')}</div>
         <div style="margin-top:14px"><div class="muted" style="font-size:14px;margin-bottom:6px">Zo evolueert <b>${MON[c.starter].names[0]}</b>:</div>${evoRow(c.starter,1)}</div></div>
-      <div class="panel"><div class="label" style="margin-bottom:8px">5 · Kies 3 geheime plaatjes (onthoud ze goed!)</div>
+      <div class="panel"><div class="label" style="margin-bottom:8px">6 · Kies 3 geheime plaatjes (onthoud ze goed!)</div>
         <div class="dots">${[0,1,2].map(i=>`<i class="${i<c.pw.length?'on':''}"></i>`).join('')}</div>
         <div class="pwgrid">${PW_PICS.map((e,i)=>`<button class="${c.pw.includes(i)?'on':''}" data-act="cpw" data-i="${i}">${e}</button>`).join('')}</div>
         ${c.pw.length?`<p class="muted" style="margin-bottom:0">Jouw plaatjes: ${c.pw.map(i=>PW_PICS[i]).join(' ')} <button class="speak" data-act="cpwreset">Opnieuw kiezen</button></p>`:''}</div>

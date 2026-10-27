@@ -18,6 +18,13 @@ const EVENTS = {
     banner: 'Sinterklaas is in het land!',
     cadeau: {knop: 'Zet je schoen', open: 'Er zit iets in je schoen!', morgen: 'Je schoen staat al. Morgen mag je hem weer zetten.'},
   },
+  maarten: {
+    naam: 'Sint Maarten', klasse: 'ev-maarten',
+    kaart: {2:'assets/maps/wereld2-maarten.png', 3:'assets/maps/wereld3-maarten.png'},
+    vallen: null, icoon: 'assets/events/lampion.png',
+    banner: 'Het is Sint Maarten! Lampionnen aan!',
+    cadeau: {knop: 'Ga langs de deuren', open: 'Je zingt een liedje en krijgt iets!', morgen: 'Je bent vandaag al langs de deuren geweest. Morgen weer!'},
+  },
   kerst: {
     naam: 'Winterwonderland', klasse: 'ev-kerst',
     kaart: {2:'assets/maps/wereld2-kerst.png', 3:'assets/maps/wereld3-kerst.png'},
@@ -28,6 +35,11 @@ const EVENTS = {
 };
 /* Wat er in een dagcadeau kan zitten. Munten of een drankje (id uit data/items.js). */
 const EVENT_CADEAUS = [{munten:10},{munten:15},{munten:20},{munten:25},{item:'hint'},{item:'heal'},{item:'xp'}];
+
+/* Verjaardag: op de verjaardag van een kind (ingevuld bij het maken van de speler of in het adminscherm)
+   ziet dat kind een feestbanner en stijgende ballonnen, en krijgt het één keer per jaar een cadeau. */
+const JARIG_CADEAU = {munten:50, item:'xp2'};
+const MAANDEN = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
 
 /* Happy hour: dubbele munten voor de eerste gevechten na het aanzetten. Ouders kiezen het aantal. */
 const HAPPY_STANDAARD = 5;

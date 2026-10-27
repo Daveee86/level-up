@@ -110,7 +110,7 @@ def gen(world, seed=7, thema=None):
             im.alpha_composite(sh,(cx-b.width//2-8,by-8))
             if thema=='kerst': b=sneeuwdak(b)
             im.alpha_composite(b,(cx-b.width//2,by-b.height))
-    if thema: versier(im, d, thema, routes, rnd)
+    if thema and thema!='maarten': versier(im, d, thema, routes, rnd)
     if world==3:
         im=ImageEnhance.Brightness(im).enhance(0.62)
         im.alpha_composite(Image.new('RGBA',(W,H),(20,24,90,80)))
@@ -126,6 +126,7 @@ def gen(world, seed=7, thema=None):
                     col=(45,226,230) if (j+i)%2==0 else (255,61,129)
                     gd.ellipse((0,0,24,24),fill=col+(50,)); gd.ellipse((8,8,16,16),fill=col+(255,))
                     im.alpha_composite(glow,(int(x)-12,int(y)-12))
+    if thema=='maarten': im=lampionnen(im, world, routes, occupied)
     return im
 def sneeuwdak(b):
     # Bovenste pixels van elk gebouw wit maken: sneeuw op het dak.
@@ -160,7 +161,28 @@ def versier(im, d, thema, routes, rnd):
         pop=sprite(SNEEUWPOP,{'K':(30,30,40),'W':(252,252,255),'O':(255,140,30)},3)
         im.alpha_composite(pop,(262,450))
 hot={k:{'x':round(cx/W*100,1),'y':round((by-B[bk].height/2)/H*100,1),'w':round(B[bk].width/W*100,1),'h':round(B[bk].height/H*100,1),'by':round(by/H*100,1)} for k,(bk,cx,by) in PLACE.items()}
-THEMAS=[None,'sint','kerst']   # nieuw event? Voeg een naam toe en teken het in versier()
+LAMPION=['..K..','..K..','.OOO.','OYYYO','OYYYO','OYYYO','.OOO.']
+def lampionnen(im, world, routes, occupied):
+    # Sint Maarten: avondlucht en een rij gloeiende lampionnen langs de paden.
+    if world!=3:
+        im=ImageEnhance.Brightness(im).enhance(0.58)
+        im.alpha_composite(Image.new('RGBA',(W,H),(40,24,90,70)))
+    kleuren=[(255,140,30),(255,200,40),(240,70,60),(120,200,255)]
+    lp=[]; n=0
+    for r in routes:
+        for i in range(len(r)-1):
+            (x1,y1),(x2,y2)=r[i],r[i+1]; k=max(1,int(math.hypot(x2-x1,y2-y1)//26))
+            for j in range(k+1):
+                x=x1+(x2-x1)*j/k-12; y=y1+(y2-y1)*j/k-6
+                if any(a<x<c and b_<y<e-14 for (a,b_,c,e) in occupied) or any(abs(x-lx)<20 and abs(y-ly)<20 for lx,ly in lp): continue
+                lp.append((x,y)); col=kleuren[n%4]; n+=1
+                glow=Image.new('RGBA',(40,40),(0,0,0,0)); gd=ImageDraw.Draw(glow)
+                for rr,a in ((20,55),(12,90)): gd.ellipse((20-rr,20-rr,20+rr,20+rr),fill=col+(a,))
+                im.alpha_composite(glow,(int(x)-20,int(y)-20))
+                l=sprite(LAMPION,{'K':(60,40,30),'O':col,'Y':(255,240,170)},3)
+                im.alpha_composite(l,(int(x)-l.width//2,int(y)-l.height//2-6))
+    return im
+THEMAS=[None,'sint','kerst','maarten']   # nieuw event? Voeg een naam toe en teken het in versier()
 for w in (2,3):
     for t in THEMAS: gen(w,thema=t).save(os.path.join(HERE,'..','assets','maps',f'wereld{w}'+(f'-{t}' if t else '')+'.png'),optimize=True)
 print('Plak dit in data/werelden.js als KAART_PLEKKEN:'); print(json.dumps({k:{'x':v['x'],'by':v['by'],'w':v['w'],'h':v['h']} for k,v in hot.items()}, indent=1))
@@ -170,5 +192,8 @@ EV=os.path.join(HERE,'..','assets','events'); os.makedirs(EV,exist_ok=True)
 sprite(['.BBB.','BbBBB','BBBbB','BBBBB','.BBB.'],{'B':(150,92,44),'b':(110,64,28)},3).save(os.path.join(EV,'pepernoot.png'))
 sprite(['..W..','W.W.W','.WWW.','WWWWW','.WWW.','W.W.W','..W..'],{'W':(255,255,255)},2).save(os.path.join(EV,'sneeuw.png'))
 pakje((214,40,50)).save(os.path.join(EV,'pakje.png'))
+sprite(LAMPION,{'K':(60,40,30),'O':(255,140,30),'Y':(255,240,170)},4).save(os.path.join(EV,'lampion.png'))
+sprite(['.RRR.','RRWRR','RRRRR','RRRRR','.RRR.','..R..','..K..','..K..','..K..'],{'R':(240,70,90),'W':(255,200,210),'K':(90,90,90)},2).save(os.path.join(EV,'ballon.png'))
+sprite(['.Y.Y.Y.','.R.R.R.','PPPPPPP','PWPWPWP','PPPPPPP','BBBBBBB','BWBWBWB','BBBBBBB'],{'Y':(255,214,40),'R':(240,70,60),'P':(255,170,200),'W':(255,255,255),'B':(150,92,44)},4).save(os.path.join(EV,'taart.png'))
 sprite(['...Y...','..RRR..','.RRYRR.','.RYYYR.','RRRYRRR','RRRRRRR','YYYYYYY'],{'R':(214,40,50),'Y':(255,206,60)},3).save(os.path.join(EV,'mijter.png'))
 sprite(['.......S.......','......SSS......','......GGG......','.....GGRGG.....','....GGGGGGG....','...GGYGGGBGG...','....GGGGGGG....','...GGRGGGGGG...','..GGGGGGYGGGG..','.GGBGGGGGGGRGG.','......TTT......'],{'S':(255,214,40),'G':(30,120,60),'R':(230,40,50),'Y':(255,214,40),'B':(70,150,255),'T':(110,72,40)},3).save(os.path.join(EV,'kerstboom.png'))

@@ -26,7 +26,7 @@ function vMap(){
       <span class="plate ${s.locked?'locked':''} ${s.done?'done':''}" style="left:${h.x}%;top:${Math.min(h.by+0.5, 91)}%">${s.locked?'🔒 ':''}${s.naam}${s.done?' ✓':''}</span>`; }).join('');
   return bar()+`<div class="wrap"><div class="home">
     <div><div class="label">${WD.naam}</div><h1 style="font-size:32px;margin:2px 0 12px">Waar ga je heen?</h1>${evBanners(p)}
-      <div class="pxscroll"><div class="pxmap" id="pxmap"><img class="px" src="${asset(kaartImg(w))}" alt="Wereldkaart ${WD.naam}">${hotspots}${evVallen()}
+      <div class="pxscroll"><div class="pxmap" id="pxmap"><img class="px" src="${asset(kaartImg(w))}" alt="Wereldkaart ${WD.naam}">${hotspots}${evVallen(p)}
         <div class="walker" id="walker" style="left:${pos.x}%;top:${pos.y}%">${trImg(p.tr)}${monImg(m,'f','wmon')}</div></div></div>
       <p class="muted" style="margin-top:10px">Tik op een gebouw om erheen te lopen. In elk gebouw leer je een vak en vecht je tegen wilde monsters. Heb je alle lessen gedaan? Dan wacht de eilandmeester. Win alle badges en daag de Kampioen uit!</p></div>
     <div class="panel me">
