@@ -65,6 +65,7 @@ In `data/werelden.js`, onder `WORLDS[2].boss` of `WORLDS[3].boss`: naam, trainer
 
 ### Een uiterlijk voor spelers
 Zet een plaatje van 64x64 in `assets/trainers/` en voeg de naam toe aan `SPELER_LOOKS` in `data/trainers.js`.
+Uit Tuxemon: zet de naam in `LOOKS` in `tools/trainers.py` en draai `python3 tools/trainers.py <tuxemon-map>`. Kinderen kunnen hun uiterlijk later wisselen in hun team-gebouw.
 
 ### De wereldkaart
 `python3 tools/kaart.py` maakt `assets/maps/wereld2.png` en `wereld3.png` opnieuw. Verplaats je gebouwen, plak dan de uitvoer in `KAART_PLEKKEN` in `data/werelden.js`.

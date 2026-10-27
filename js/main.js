@@ -97,6 +97,7 @@ document.addEventListener('click', e => {
     case 'buyit': { const it=ITEM[d.id]; if(p.coins>=it.prijs){ p.coins-=it.prijs; p.items[it.id]=(p.items[it.id]||0)+1; save(); view.msg=`Gekocht: ${it.naam}.`; render(); } break; }
     case 'team': go({s:'team'}); break;
     case 'selteam': view.sel=d.u; view.msg=''; render(); break;
+    case 'settr': if(SPELER_LOOKS[p.gender]?.includes(d.k)){ p.tr=d.k; save(); view.msg='Je ziet er nu anders uit!'; render(); } break;
     case 'setact': p.act=d.u; save(); view.msg='Dit monster vecht nu met je mee!'; render(); break;
     case 'potion': { const m=p.mons.find(x=>x.u===d.u); if(!m || !(p.items[d.id]>0)) break; const mb=mLvl(m), sb=mStage(m);
       p.items[d.id]--; m.xp += d.id==='xp2'?200:60; save(); view.msg=`+${d.id==='xp2'?200:60} XP voor ${mName(m)}!`; render();

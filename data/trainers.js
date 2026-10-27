@@ -5,8 +5,8 @@
    Let op: verander bestaande keys niet, ze staan opgeslagen in de voortgang van kinderen.
    ========================================================= */
 const SPELER_LOOKS = {
-  b: ['b1', 'b2', 'b3', 'b4'],   // jongen
-  g: ['g1', 'g2', 'g3', 'g4'],   // meisje
+  b: ['b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'b9', 'b10'],   // jongen
+  g: ['g1', 'g2', 'g3', 'g4', 'g5', 'g6', 'g7', 'g8', 'g9', 'g10'],   // meisje
 };
 
 /* Overige trainers, alleen als naslag (de bazen zelf staan in data/werelden.js):

@@ -16,6 +16,8 @@ function vTeam(){
         <div class="mgrid">${p.mons.map(x=>{ const xl=levelInfo(x.xp); return `<button class="mcard ${x.u===sel.u?'sel':''}" data-act="selteam" data-u="${x.u}">${monImg(x)}<b>${mName(x)}</b><small>Level ${xl.lvl}${x.u===p.act?' · actief':''}</small><div class="mbar"><i style="width:${Math.round(xl.cur/xl.need*100)}%"></i></div></button>`; }).join('')}</div>
         <div class="label" style="margin:22px 0 8px">Monsterdex · ${p.mons.length} van ${dexList.length} verzameld · ${p.seen.length} gezien</div>
         <div class="dex">${dexList.map(x=>{ const own=owns(p,x.id), seen=p.seen.includes(x.id); return `<div title="${own||seen?x.names[0]:'???'}">${sprite(x.spr[0],'f',own?'':'sil')}${x.tier==='legend'?'<span>★</span>':''}</div>`; }).join('')}</div>
+        <div class="label" style="margin:22px 0 8px">Jouw trainer</div>
+        <div class="animals looks">${(SPELER_LOOKS[p.gender]||SPELER_LOOKS.b).map(k=>`<button class="${p.tr===k?'on':''}" data-act="settr" data-k="${k}" aria-label="uiterlijk ${k}">${trImg(k)}</button>`).join('')}</div>
         <p class="muted" style="font-size:14px">Gekleurd = in je team. Silhouet = nog niet verzameld. Legendarische monsters (★) win je van eilandmeesters en de Kampioen.</p></div></div></div>`;
 }
 
