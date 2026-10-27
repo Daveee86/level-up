@@ -64,12 +64,13 @@ Zet een plaatje van 64x64 in `assets/trainers/` en voeg de naam toe aan `SPELER_
 ### De wereldkaart
 `python3 tools/kaart.py` maakt `assets/maps/wereld2.png` en `wereld3.png` opnieuw. Verplaats je gebouwen, plak dan de uitvoer in `KAART_PLEKKEN` in `data/werelden.js`.
 
-## Online zetten (Cloudflare Pages)
+## Online zetten (Cloudflare)
 
-Workers & Pages → Create → Pages → Connect to Git → kies deze repository.
-- Framework preset: None
-- Build command: (leeg laten)
-- Build output directory: `/`
+Het project `level-up2` in Cloudflare (Workers & Pages) is gekoppeld aan deze repository.
+Elke push naar `main` komt na ongeveer een minuut online.
+- Build command: geen. Deploy command: `npx wrangler deploy`.
+- Instellingen staan in `wrangler.jsonc`. Wat niet online hoeft, staat in `.assetsignore`.
+- De Cloudflare GitHub-app moet toegang hebben tot deze (privé) repository.
 
 Werk je aan iets groots, gebruik dan een aparte branch. Cloudflare maakt daar een eigen test-adres van. Pas als het goed is, voeg je het samen met `main`.
 

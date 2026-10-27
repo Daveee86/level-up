@@ -1,0 +1,11 @@
+// Instellingen voor Cloudflare (Workers met statische bestanden).
+// Cloudflare bouwt niets: hij zet de bestanden uit deze map online.
+// Wat níet online hoeft, staat in .assetsignore.
+{
+  "name": "level-up2",
+  "compatibility_date": "2025-10-01",
+  "assets": {
+    "directory": "./",
+    "not_found_handling": "single-page-application"
+  }
+}

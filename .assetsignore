@@ -1,0 +1,10 @@
+# Deze bestanden komen niet op de website
+.git
+.gitignore
+.assetsignore
+wrangler.jsonc
+README.md
+CREDITS.md
+tools
+dist
+node_modules
