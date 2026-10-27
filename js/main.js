@@ -23,6 +23,12 @@ document.addEventListener('change', e => { const t=e.target; const p=S.profiles.
   if(t.dataset.chg==='groep' && p){ p.groep=+t.value; save(); render(); }
   if(t.dataset.chg==='coins' && p){ const v=Math.floor(Number(t.value)); if(Number.isFinite(v) && v>=0){ p.coins=v; save(); } render(); } });
 document.addEventListener('keydown', e => { if(e.key==='Enter' && e.target.id==='opw'){ e.preventDefault(); checkOuderPw(); } });
+function lesAnswer(o){
+  if(view.picked!==null) return;
+  const q=view.oef[view.i]; view.picked=o; view.fb=null;
+  noteer(P(), view.id, q, o===q.ans); save();
+  if(q.sayAns && o===q.ans) speak(q.sayAns,'en-GB');
+  render(); }
 function checkOuderPw(){ const v=(document.getElementById('opw')?.value||''); if(v===OUDER_PW) go({s:'ouders', ok:true}); else { view={s:'ouderpw', err:true}; render(); document.getElementById('opw')?.focus(); } }
 document.addEventListener('click', e => {
   const t = e.target.closest('[data-act]'); if(!t || t.disabled) return;
@@ -64,15 +70,15 @@ document.addEventListener('click', e => {
     case 'sayuitleg': { const l=L.find(x=>x.id===view.id); const tmp=document.createElement('div'); tmp.innerHTML=l.uitleg; speak(tmp.textContent); break; }
     case 'startoef': view.phase='oef'; view.i=0; view.picked=null; view.fb=null; render(); break;
     case 'sayq': { const q = view.s==='battle' ? curQ(view) : view.oef[view.i]; const tmp=document.createElement('div'); tmp.innerHTML=q.say||q.q; speak(tmp.textContent); break; }
-    case 'ans': {
-      if(view.s==='battle'){ battleAnswer(d.o); break; }
-      if(view.picked!==null) break;
-      const q=view.oef[view.i]; view.picked=d.o; view.fb=null;
-      if(q.sayAns && d.o===q.ans) speak(q.sayAns,'en-GB');
-      render(); break; }
+    case 'ans': if(view.s==='battle') battleAnswer(d.o); else lesAnswer(d.o); break;
+    case 'pad': padDruk(d.k); break;
+    case 'typok': { const bat = view.s==='battle'; const q = bat ? curQ(view) : view.oef[view.i]; const inv = invoerVan(q, bat ? q.lid : view.id);
+      if(!inv || view.picked!==null) break;
+      if(!(view.typed||'').replace(',','')){ const v=document.querySelector('.invoer .display'); if(v){ v.classList.remove('leeg'); void v.offsetWidth; v.classList.add('leeg'); } break; }
+      const o = invoerAntwoord(q, inv, view.typed); if(bat) battleAnswer(o); else lesAnswer(o); break; }
     case 'next': {
       view.fb=null;
-      if(view.i+1<view.oef.length){ view.i++; view.picked=null; render(); window.scrollTo(0,0); }
+      if(view.i+1<view.oef.length){ view.i++; view.picked=null; view.typed=''; render(); window.scrollTo(0,0); }
       else startBattle('wild', view.id);
       break; }
     case 'bnext': battleNext(); break;

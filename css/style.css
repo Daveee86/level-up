@@ -387,3 +387,21 @@ body.w3.ev-maarten{--accent:#ff9a3d;--accent-sh:#a85a14;--accent-soft:#3a2410;--
 .valt.stijgt img{animation-name:stijgt}
 @keyframes stijgt{0%{top:104%;transform:translateX(0)}50%{transform:translateX(-10px)}100%{top:-10%;transform:translateX(0)}}
 .gebrij select{font:inherit;padding:6px 8px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink)}
+
+/* ---- Cijferpaneel (js/invoer.js) ---- */
+.invoer{display:grid;gap:10px;justify-items:center;margin-top:6px}
+.invoer .display{min-width:220px;max-width:100%;display:flex;align-items:center;justify-content:center;gap:4px;font-family:var(--f-display);font-size:40px;font-weight:800;line-height:1;padding:12px 18px;border-radius:16px;border:3px solid var(--line);background:var(--card);font-variant-numeric:tabular-nums}
+.invoer .display .fix{color:var(--ink-soft);font-size:.7em}
+.invoer .display .val:empty::before{content:"?";color:var(--ink-soft);opacity:.5}
+.invoer .display .caret{width:3px;height:.9em;background:var(--accent);animation:knipper 1s steps(2) infinite}
+@keyframes knipper{50%{opacity:0}}
+.invoer .display.right{border-color:var(--good);background:var(--good-bg)}
+.invoer .display.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.invoer .display.leeg{animation:shake .35s}
+.invoer .juist{font-size:18px}
+.invoer .pad{display:grid;grid-template-columns:repeat(3,72px);gap:8px}
+.invoer .pk{height:60px;border-radius:14px;background:var(--card);border:2px solid var(--line);box-shadow:0 3px 0 var(--line);font-family:var(--f-display);font-size:28px;font-weight:800;color:var(--ink)}
+.invoer .pk:active{transform:translateY(2px);box-shadow:0 1px 0 var(--line)}
+.invoer .pk.del{font-size:24px;color:var(--ink-soft)}
+.invoer .typok{min-width:232px;font-size:20px}
+ul.lastig{margin:0 0 4px;padding-left:20px;display:grid;gap:2px}

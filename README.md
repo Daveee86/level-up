@@ -50,6 +50,10 @@ Ouders kunnen ook zelf lessen maken in het ouderscherm (les-editor). Die staan a
 ### Een les met een recept (rekenen)
 Zie `lessen/rekenen.js`: `gen()` maakt elke keer een nieuwe som. Een vraag is `{q, opts, ans, uitleg}`.
 
+### Zelf intypen en lastige onderdelen
+Rekenvragen met een getal als antwoord typt het kind in met een cijferpaneel (`js/invoer.js`). Zet `keuze:true` in een les om dat uit te zetten.
+Geef in een recept `skill:'tafel van 7'` mee: dan houdt Level-UP per onderdeel bij hoe het gaat, en ziet Admin welke onderdelen lastig zijn.
+
 ### Een monster
 1. Plaatjes ophalen: `python3 tools/sprites.py <map-met-tuxemon> agnite agnidon agnigon`
 2. Plak de regel die het script geeft in `data/monsters.js` en pas `tier`, `price` en `req` aan.

@@ -45,11 +45,11 @@ function tickRead(){
   else if(b.disabled){ b.disabled = false; b.textContent = 'Ik snap het, oefenen!'; }
 }
 setInterval(tickRead, 500);
-function qBlock(q, picked, young, hide){
-  const answered = picked !== null;
+function qBlock(q, picked, young, hide, lid){
+  const answered = picked !== null; const inv = invoerVan(q, lid);
   return `<div class="row" style="justify-content:space-between"><div class="q">${q.q}</div>${(young||q.say)?`<button class="speak" data-act="sayq">🔊</button>`:''}</div>
     ${q.vis?`<div class="vis">${q.vis}</div>`:''}
-    ${q.tik ? `<div style="max-width:360px">${topoMap(answered?{res:{ans:q.ans,picked}}:{click:true})}</div>` : `<div class="opts">${q.opts.filter(o=>!(hide||[]).includes(o)).map(o=>{ let c=''; if(answered){ if(o===q.ans) c='right'; else if(o===picked) c='wrong'; } return `<button class="opt ${q.big?'big':''} ${c}" data-act="ans" data-o="${esc(o)}" ${answered?'disabled':''}>${esc(o)}</button>`; }).join('')}</div>`}`;
+    ${inv && !(hide||[]).length ? invoerHtml(q, inv, view, P().groep) : q.tik ? `<div style="max-width:360px">${topoMap(answered?{res:{ans:q.ans,picked}}:{click:true})}</div>` : `<div class="opts">${q.opts.filter(o=>!(hide||[]).includes(o)).map(o=>{ let c=''; if(answered){ if(o===q.ans) c='right'; else if(o===picked) c='wrong'; } return `<button class="opt ${q.big?'big':''} ${c}" data-act="ans" data-o="${esc(o)}" ${answered?'disabled':''}>${esc(o)}</button>`; }).join('')}</div>`}`;
 }
 function vLes(){
   const p = P(); const l = L.find(x=>x.id===view.id); const v = isle(l.vak, W()) || isle(l.vak, 2); const young = p.groep<=3; const WD = WORLDS[W()];
@@ -62,7 +62,7 @@ function vLes(){
   return bar()+`<div class="wrap"><button class="back" data-act="isle" data-v="${l.vak}">← ${v.naam}</button>
     <div class="panel qcard"><div class="prog">${view.oef.map((_,k)=>`<i class="${k<view.i?'done':k===view.i?'now':''}"></i>`).join('')}</div>
       <span class="phase">Oefenen ${view.i+1} van ${view.oef.length}</span>
-      ${qBlock(q, view.picked, young)}
+      ${qBlock(q, view.picked, young, null, view.id)}
       ${answered?`<div class="fb ${ok?'ok':'no'}"><b>${view.fb}</b>${q.uitleg}<div style="margin-top:12px"><button class="btn ${ok?'':'sun'}" data-act="next">${view.i+1<view.oef.length?'Volgende':'Naar het gevecht! ⚔️'}</button></div></div>`:''}
     </div></div>`;
 }

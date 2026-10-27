@@ -59,7 +59,7 @@ function vBattle(){
   } else {
     const isLast = b.phase==='toets' ? b.i===b.n-1 : false;
     panel = `<div class="row" style="justify-content:space-between;margin-bottom:6px"><span class="phase ${b.phase==='redding'?'toets':''}">${b.phase==='redding'?`Reddingsvraag ${b.rescue.i+1} van 2`:`Vraag ${b.i+1} van ${b.n}`}</span>${b.streak>=2?`<span class="phase toets">Combo ×${b.streak}</span>`:''}</div>
-      ${qBlock(q, b.picked, young, b.hide)}
+      ${qBlock(q, b.picked, young, b.hide, q.lid)}
       ${answered?`<div class="fb ${ok?'ok':'no'}"><b>${b.fb}</b>${q.uitleg}<div style="margin-top:12px"><button class="btn ${ok?'':'sun'}" data-act="bnext">${isLast?'Uitslag bekijken':'Volgende vraag'}</button></div></div>`
         : (b.phase==='toets' ? `<div class="bitems">${['hint','shield'].map(itemBtn).join('')}</div>` : '')}`;
   }
@@ -80,6 +80,7 @@ function vBattle(){
 function battleAnswer(o){
   const p = P(); const b = view; if(b.picked!==null || !(b.phase==='toets'||b.phase==='redding')) return; const m = act(p);
   const q = curQ(b); const ok = o===q.ans; b.picked = o; b.fb = null;
+  noteer(p, q.lid, q, ok && !b.hide.length);
   if(b.phase==='redding'){
     b.rescue.asked++;
     if(ok){ b.rescue.correct++; b.anim='hitfoe'; b.msg=`${mName(m)} ${ATTACK[powerOf(m)]}! Raak!`; }
@@ -102,7 +103,7 @@ function battleAnswer(o){
 function battleNext(){
   const p = P(); const b = view; const q = curQ(b);
   b.lastFb = `<div class="fb ${b.picked===q.ans?'ok':'no'}" style="text-align:left;width:100%"><b>${b.fb||''}</b>${q.uitleg}</div>`;
-  b.picked=null; b.fb=null; b.hide=[]; b.anim='';
+  b.picked=null; b.fb=null; b.hide=[]; b.anim=''; b.typed='';
   if(b.phase==='toets'){
     if(b.i < b.n-1){ b.i++; b.msg = `Wat doe je, ${esc(p.name)}?`; }
     else {
