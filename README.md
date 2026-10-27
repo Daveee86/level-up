@@ -53,6 +53,7 @@ Zie `lessen/rekenen.js`: `gen()` maakt elke keer een nieuwe som. Een vraag is `{
 ### Zelf intypen en lastige onderdelen
 Rekenvragen met een getal als antwoord typt het kind in met een cijferpaneel (`js/invoer.js`). Zet `keuze:true` in een les om dat uit te zetten.
 Geef in een recept `skill:'tafel van 7'` mee: dan houdt Level-UP per onderdeel bij hoe het gaat, en ziet Admin welke onderdelen lastig zijn.
+Gericht herhalen staat in `js/herhalen.js` (instellingen bovenaan in `HERHAAL`): na een paar gevechten een trainingsronde met de lastigste rekenonderdelen, daarna komen die af en toe terug in gevechten.
 
 ### Een monster
 1. Plaatjes ophalen: `python3 tools/sprites.py <map-met-tuxemon> agnite agnidon agnigon`

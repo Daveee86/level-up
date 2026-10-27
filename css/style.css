@@ -405,3 +405,10 @@ body.w3.ev-maarten{--accent:#ff9a3d;--accent-sh:#a85a14;--accent-soft:#3a2410;--
 .invoer .pk.del{font-size:24px;color:var(--ink-soft)}
 .invoer .typok{min-width:232px;font-size:20px}
 ul.lastig{margin:0 0 4px;padding-left:20px;display:grid;gap:2px}
+
+/* ---- Gericht herhalen (js/herhalen.js) ---- */
+.evbanner.herh{border-color:var(--accent);background:var(--accent-soft)}
+.phase.herh{background:var(--accent-soft);color:var(--accent);font-weight:700}
+.w3 .phase.herh{color:var(--link)}
+.trres{display:grid;gap:10px;width:100%;max-width:420px;text-align:left}
+.trres>div{display:grid;gap:2px}

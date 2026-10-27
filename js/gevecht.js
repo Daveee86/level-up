@@ -30,7 +30,7 @@ function startBattle(kind, ref){
   }
   if(!p.seen.includes(enemy.id)){ p.seen.push(enemy.id); save(); }
   const spec = battleSpec(kind, ref, w);
-  go({s:'battle', kind, ref, boss, src, enemy, n:spec.n, need:spec.need, qs:buildQs(src, spec.n, p.groep), i:0,
+  go({s:'battle', kind, ref, boss, src, enemy, n:spec.n, need:spec.need, qs:mengHerhaling(p, src, buildQs(src, spec.n, p.groep)), i:0,
       phase:'toets', picked:null, correct:0, wrong:0, hints:0, wrongL:[], streak:0, combo:0, cshield:false, cshieldUsed:false,
       hide:[], anim:'', rescue:null, msg:boss?`${boss.naam} stuurt ${enemy.name} het veld in!`:`Een wilde ${enemy.name} verschijnt!`});
 }
@@ -80,7 +80,7 @@ function vBattle(){
 function battleAnswer(o){
   const p = P(); const b = view; if(b.picked!==null || !(b.phase==='toets'||b.phase==='redding')) return; const m = act(p);
   const q = curQ(b); const ok = o===q.ans; b.picked = o; b.fb = null;
-  noteer(p, q.lid, q, ok && !b.hide.length);
+  noteer(p, q.lid, q, ok ? (b.hide.length ? 'hint' : 'zelf') : 'fout');
   if(b.phase==='redding'){
     b.rescue.asked++;
     if(ok){ b.rescue.correct++; b.anim='hitfoe'; b.msg=`${mName(m)} ${ATTACK[powerOf(m)]}! Raak!`; }
@@ -155,6 +155,7 @@ function battleEnd(){
   if(b.combo){ coins += b.combo; notes.push(`Combo-bonus: +${b.combo} munten.`); }
   if(win && p.luck){ coins*=2; p.luck=0; notes.push('Geluksbamboe: dubbele munten!'); }
   if(happyGebruik(p)){ coins*=2; const o=happyOver(p); notes.push(`Happy hour: dubbele munten! ${o?`Nog ${o} gevecht${o===1?'':'en'} met dubbele munten.`:'Dat was je laatste happy-hour-gevecht.'}`); }
+  const gb = geefBonussen(p); coins += gb.coins; notes.push(...gb.notes); herhState(p).n++;
   p.coins += coins; p.txp += xp; m.xp += xp;
   p.log.unshift({d:Date.now(), l:b.kind==='wild'?b.ref:'boss:'+b.ref, s:b.correct, t:b.n, h:b.hints, r:b.rescue?(rescued?'ok':'mis'):'', rc:b.rescue?b.rescue.correct:0, rn:b.rescue?b.rescue.asked:0, cs:b.cshieldUsed?1:0, win}); p.log = p.log.slice(0,40);
   save();

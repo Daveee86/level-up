@@ -40,27 +40,47 @@ function padDruk(k){
   view.typed = t;
   const v = document.querySelector('.invoer .val'); if(v) v.textContent = t; else render();
 }
-/* ---- lastige onderdelen ---- */
-function noteer(p, lid, q, ok){
-  if(!p || !lid) return;
+/* ---- lastige onderdelen ----
+   Per onderdeel: r = laatste 10 keer: '1' zelf goed, 'h' goed met hint (geholpen), '0' fout.
+   L = lastig (blijft staan tot het weer lukt), V = tijdstip waarop het verbeterde. */
+const LASTIG = {min:4, fout:2, zelf:.7, beheerst:4};   // lastig na minstens 4 pogingen met 2+ fouten en < 70% zelf goed; weer goed na 4x achter elkaar zelf goed
+const telR = r => ({n:r.length, zelf:[...r].filter(c=>c==='1').length, hint:[...r].filter(c=>c==='h').length, fout:[...r].filter(c=>c==='0').length});
+function wordtLastig(x){ const t = telR(x.r); return t.n>=LASTIG.min && t.fout>=LASTIG.fout && t.zelf/t.n < LASTIG.zelf; }
+function isLastig(x){ return x.L!==undefined ? !!x.L : wordtLastig(x); }
+/* status: 'zelf' (zelfstandig goed), 'hint' (goed met hulp) of 'fout'. Geeft true terug als het onderdeel nu weer beheerst wordt. */
+function noteer(p, lid, q, status){
+  if(!p || !lid) return false;
+  if(status===true) status='zelf'; if(status===false) status='fout';
   const sk = q.skill || '_les'; p.fouten = p.fouten || {}; const per = p.fouten[lid] = p.fouten[lid] || {};
   const x = per[sk] = per[sk] || {g:0, f:0, r:''};
-  if(ok) x.g++; else x.f++; x.r = (x.r + (ok?'1':'0')).slice(-10); x.t = Date.now();
+  if(status==='fout') x.f++; else x.g++;
+  x.r = (x.r + ({zelf:'1', hint:'h', fout:'0'})[status]).slice(-10); x.t = Date.now();
+  const was = isLastig(x); let beter = false;
+  if(!was && wordtLastig(x)) { x.L = true; x.Ls = Date.now(); }
+  else if(was && x.r.slice(-LASTIG.beheerst)==='1'.repeat(LASTIG.beheerst)) { x.L = false; x.V = Date.now(); beter = true; p.beter = (p.beter||[]).concat({lid, sk}); }
+  else x.L = was;
+  save(); return beter;
 }
-/* Lastig = minstens 3 keer geoefend en de laatste keren minder dan 70% goed. Slechtste eerst. */
+function skillInfo(p, lid, sk, x){ const l = L.find(y=>y.id===lid); const t = telR(x.r);
+  return {lid, sk, naam: sk==='_les' ? (l?l.titel:lid) : sk, les: l?l.titel:lid, vak: l?l.vak:'', ...t, x}; }
+/* Lastig, slechtste eerst. */
 function lastig(p, max=6){
   const out = [];
-  for(const [lid, per] of Object.entries(p.fouten||{})) for(const [sk, x] of Object.entries(per)){
-    const n = x.r.length, goed = [...x.r].filter(c=>c==='1').length;
-    if(n >= 3 && goed/n < .7){ const l = L.find(y=>y.id===lid); out.push({lid, sk, naam: sk==='_les' ? (l?l.titel:lid) : sk, les: l?l.titel:lid, vak: l?l.vak:'', goed, n}); }
-  }
-  return out.sort((a,b)=>a.goed/a.n - b.goed/b.n || b.n - a.n).slice(0, max);
+  for(const [lid, per] of Object.entries(p.fouten||{})) for(const [sk, x] of Object.entries(per)) if(isLastig(x)) out.push(skillInfo(p, lid, sk, x));
+  return out.sort((a,b)=>a.zelf/a.n - b.zelf/b.n || b.n - a.n).slice(0, max);
+}
+function verbeterd(p, dagen=14){
+  const out = [], grens = Date.now() - dagen*864e5;
+  for(const [lid, per] of Object.entries(p.fouten||{})) for(const [sk, x] of Object.entries(per)) if(!isLastig(x) && x.V && x.V > grens) out.push(skillInfo(p, lid, sk, x));
+  return out.sort((a,b)=>b.x.V - a.x.V);
 }
 function lastigHtml(p){
-  const ls = lastig(p);
+  const ls = lastig(p), vb = verbeterd(p);
+  const regel = x => `${x.n} keer: ${x.zelf} zelf goed${x.hint?`, ${x.hint} met hint`:''}, ${x.fout} fout`;
   return `<div class="label">Lastige onderdelen</div>${ls.length
-    ? `<ul class="lastig">${ls.map(x=>`<li><b>${esc(x.naam)}</b> <span class="muted">${x.sk==='_les'?(VAKKEN[x.vak]?.vak||''):esc(x.les)} · laatste ${x.n} keer ${x.goed} goed</span></li>`).join('')}</ul>`
-    : '<p class="muted" style="margin:0">Nog niets opvallends. Een onderdeel komt hier als het kind het minstens 3 keer deed en minder dan 70% goed had.</p>'}`;
+    ? `<ul class="lastig">${ls.map(x=>`<li><b>${esc(x.naam)}</b> <span class="muted">${x.sk==='_les'?(VAKKEN[x.vak]?.vak||''):esc(x.les)} · laatste ${regel(x)}</span></li>`).join('')}</ul>`
+    : '<p class="muted" style="margin:0">Nog niets opvallends. Een onderdeel komt hier na minstens 4 pogingen met 2 of meer fouten.</p>'}
+    ${vb.length ? `<div class="label" style="margin-top:6px">Onlangs verbeterd</div><ul class="lastig">${vb.map(x=>`<li><b>${esc(x.naam)}</b> ✓ <span class="muted">${new Date(x.x.V).toLocaleDateString('nl-NL',{day:'numeric',month:'short'})} · laatste ${regel(x)}</span></li>`).join('')}</ul>` : ''}`;
 }
 document.addEventListener('keydown', e => {
   if(e.target.closest && e.target.closest('input,select,textarea')) return;

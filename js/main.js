@@ -11,7 +11,7 @@ function render(){
   else if(view.s==='create' && view.c && view.c.groep) w = worldOf(view.c.groep);
   const ev = evActief(); document.body.className = 'w'+w + (ev ? ' '+ev.klasse : '');
   setTimeout(()=>{ const sc=document.querySelector('.pxscroll'); if(sc && sc.scrollWidth>sc.clientWidth){ const wk=document.getElementById('walker'); sc.scrollLeft = wk ? wk.offsetLeft - sc.clientWidth/2 : (sc.scrollWidth-sc.clientWidth)/2; } },0);
-  app.innerHTML = ({login:vLogin, pw:vPw, create:vCreate, map:vMap, isle:vIsle, les:vLes, battle:vBattle, result:vResult, bossintro:vBossIntro, shop:vShop, team:vTeam, ouders:vOuders, ouderpw:vOuderPw, editor:vEditor}[view.s] || vLogin)();
+  app.innerHTML = ({login:vLogin, pw:vPw, create:vCreate, map:vMap, isle:vIsle, les:vLes, battle:vBattle, result:vResult, bossintro:vBossIntro, shop:vShop, team:vTeam, ouders:vOuders, ouderpw:vOuderPw, editor:vEditor, training:vTraining}[view.s] || vLogin)();
 }
 
 /* ---------------- Acties ---------------- */
@@ -26,7 +26,8 @@ document.addEventListener('keydown', e => { if(e.key==='Enter' && e.target.id===
 function lesAnswer(o){
   if(view.picked!==null) return;
   const q=view.oef[view.i]; view.picked=o; view.fb=null;
-  noteer(P(), view.id, q, o===q.ans); save();
+  noteer(P(), q.lid || view.id, q, o===q.ans); save();
+  if(view.res) view.res[view.i] = o===q.ans;
   if(q.sayAns && o===q.ans) speak(q.sayAns,'en-GB');
   render(); }
 function checkOuderPw(){ const v=(document.getElementById('opw')?.value||''); if(v===OUDER_PW) go({s:'ouders', ok:true}); else { view={s:'ouderpw', err:true}; render(); document.getElementById('opw')?.focus(); } }
@@ -72,13 +73,15 @@ document.addEventListener('click', e => {
     case 'sayq': { const q = view.s==='battle' ? curQ(view) : view.oef[view.i]; const tmp=document.createElement('div'); tmp.innerHTML=q.say||q.q; speak(tmp.textContent); break; }
     case 'ans': if(view.s==='battle') battleAnswer(d.o); else lesAnswer(d.o); break;
     case 'pad': padDruk(d.k); break;
-    case 'typok': { const bat = view.s==='battle'; const q = bat ? curQ(view) : view.oef[view.i]; const inv = invoerVan(q, bat ? q.lid : view.id);
+    case 'training': startTraining(); break;
+    case 'typok': { const bat = view.s==='battle'; const q = bat ? curQ(view) : view.oef[view.i]; const inv = invoerVan(q, q.lid || view.id);
       if(!inv || view.picked!==null) break;
       if(!(view.typed||'').replace(',','')){ const v=document.querySelector('.invoer .display'); if(v){ v.classList.remove('leeg'); void v.offsetWidth; v.classList.add('leeg'); } break; }
       const o = invoerAntwoord(q, inv, view.typed); if(bat) battleAnswer(o); else lesAnswer(o); break; }
     case 'next': {
       view.fb=null;
       if(view.i+1<view.oef.length){ view.i++; view.picked=null; view.typed=''; render(); window.scrollTo(0,0); }
+      else if(view.s==='training') finishTraining();
       else startBattle('wild', view.id);
       break; }
     case 'bnext': battleNext(); break;

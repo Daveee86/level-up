@@ -47,7 +47,7 @@ function tickRead(){
 setInterval(tickRead, 500);
 function qBlock(q, picked, young, hide, lid){
   const answered = picked !== null; const inv = invoerVan(q, lid);
-  return `<div class="row" style="justify-content:space-between"><div class="q">${q.q}</div>${(young||q.say)?`<button class="speak" data-act="sayq">🔊</button>`:''}</div>
+  return `${q.herh && view.s==='battle' ? '<span class="phase herh">🎯 Herhaling</span>' : ''}<div class="row" style="justify-content:space-between"><div class="q">${q.q}</div>${(young||q.say)?`<button class="speak" data-act="sayq">🔊</button>`:''}</div>
     ${q.vis?`<div class="vis">${q.vis}</div>`:''}
     ${inv && !(hide||[]).length ? invoerHtml(q, inv, view, P().groep) : q.tik ? `<div style="max-width:360px">${topoMap(answered?{res:{ans:q.ans,picked}}:{click:true})}</div>` : `<div class="opts">${q.opts.filter(o=>!(hide||[]).includes(o)).map(o=>{ let c=''; if(answered){ if(o===q.ans) c='right'; else if(o===picked) c='wrong'; } return `<button class="opt ${q.big?'big':''} ${c}" data-act="ans" data-o="${esc(o)}" ${answered?'disabled':''}>${esc(o)}</button>`; }).join('')}</div>`}`;
 }
