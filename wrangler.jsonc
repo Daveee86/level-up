@@ -4,6 +4,10 @@
 {
   "name": "level-up2",
   "compatibility_date": "2025-10-01",
+  // Openbaar adres: level-up2.ddavelaar.workers.dev
+  "workers_dev": true,
+  // Test-adressen voor andere branches
+  "preview_urls": true,
   "assets": {
     "directory": "./",
     "not_found_handling": "single-page-application"
