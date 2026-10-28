@@ -1,6 +1,7 @@
 /* ---- gevecht ----
-   Een gevecht is een toets met een vast aantal vragen (per wereld). Je maakt altijd alle vragen.
+   Een gevecht heeft hoogstens n vragen (per wereld). Zodra je `need` keer goed hebt, is het monster verslagen en stopt het gevecht.
    Balk tegenstander = goede antwoorden die je nog nodig hebt. Jouw balk = fouten die je nog mag maken.
+   Sterren: hoeveel van je antwoorden goed waren (0 fouten = 3 sterren, 1 fout = 2 sterren).
    Te kort (1 of 2)? Met een herstel-drankje krijg je 2 reddingsvragen. Sterren tellen alleen de echte toets. */
 function battleSpec(kind, ref, w){ return GEVECHT[kind==='wild' ? 'wild' : ref==='champ' ? 'champ' : 'boss'][w]; }
 const qKey = (lid, q) => lid+'|'+q.q+'|'+(q.vis||'')+'|'+q.ans;
@@ -57,7 +58,7 @@ function vBattle(){
   } else if(b.phase==='klaar'){
     panel = `<div style="text-align:center;display:grid;gap:10px;justify-items:center">${b.lastFb||''}<button class="btn sun" data-act="bend">Verder</button></div>`;
   } else {
-    const isLast = b.phase==='toets' ? b.i===b.n-1 : false;
+    const isLast = b.phase==='toets' ? (b.i===b.n-1 || b.correct>=b.need) : false;
     panel = `<div class="row" style="justify-content:space-between;margin-bottom:6px"><span class="phase ${b.phase==='redding'?'toets':''}">${b.phase==='redding'?`Reddingsvraag ${b.rescue.i+1} van 2`:`Vraag ${b.i+1} van ${b.n}`}</span>${b.streak>=2?`<span class="phase toets">Combo ×${b.streak}</span>`:''}</div>
       ${qBlock(q, b.picked, young, b.hide, q.lid)}
       ${answered?`<div class="fb ${ok?'ok':'no'}"><b>${b.fb}</b>${q.uitleg}<div style="margin-top:12px"><button class="btn ${ok?'':'sun'}" data-act="bnext">${isLast?'Uitslag bekijken':'Volgende vraag'}</button></div></div>`
@@ -89,7 +90,7 @@ function battleAnswer(o){
     b.correct++; if(b.hide.length) b.hints++; b.streak++; b.anim='hitfoe';
     if(b.streak>=3) b.combo += 2;
     const done = b.correct===b.need;
-    b.msg = done ? `${mName(m)} ${ATTACK[powerOf(m)]}! ${b.enemy.name} is uitgeschakeld. Maak de toets af voor je sterren!`
+    b.msg = done ? `${mName(m)} ${ATTACK[powerOf(m)]}! ${b.enemy.name} is verslagen!`
       : `${mName(m)} ${ATTACK[powerOf(m)]}!${b.streak>=3?` Combo ×${b.streak}: +2 munten!`:' Raak!'}`;
   } else {
     b.wrong++; b.wrongL.push(q.lid); b.anim='hitme';
@@ -105,7 +106,8 @@ function battleNext(){
   b.lastFb = `<div class="fb ${b.picked===q.ans?'ok':'no'}" style="text-align:left;width:100%"><b>${b.fb||''}</b>${q.uitleg}</div>`;
   b.picked=null; b.fb=null; b.hide=[]; b.anim=''; b.typed='';
   if(b.phase==='toets'){
-    if(b.i < b.n-1){ b.i++; b.msg = `Wat doe je, ${esc(p.name)}?`; }
+    if(b.correct >= b.need){ b.phase='klaar'; b.lastFb=''; b.msg=`${b.enemy.name} is verslagen!`; }
+    else if(b.i < b.n-1){ b.i++; b.msg = `Wat doe je, ${esc(p.name)}?`; }
     else {
       const short = b.need - b.correct;
       if(short<=0){ b.phase='klaar'; b.lastFb=''; b.msg=`${b.enemy.name} is verslagen!`; }
@@ -137,13 +139,15 @@ function battleEnd(){
   const p = P(); const b = view; const m = act(p); const w = worldOf(p.groep);
   const passed = b.correct >= b.need; const rescued = !passed && b.rescue && b.rescue.correct >= (b.need - b.correct); const win = passed || rescued;
   const tBefore = levelInfo(p.txp).lvl, mBefore = mLvl(m), sBefore = mStage(m);
-  const pct = b.correct / b.n; const stars = pct>=.9 ? 3 : pct>=.8 ? 2 : passed ? 1 : 0;
+  const gevraagd = b.correct + b.wrong;                     // het gevecht stopt zodra het monster verslagen is
+  const pct = gevraagd ? b.correct / gevraagd : 0; const stars = !passed ? 0 : pct>=.9 ? 3 : pct>=.8 ? 2 : 1;
+  const score = passed ? b.n - b.wrong : b.correct;          // gewonnen: vragen die je niet meer hoefde te maken tellen als goed
   let coins, xp, reward=null; const notes=[];
   if(b.kind==='wild'){
     const prev = p.lessons[b.ref] || {best:0,times:0};
-    coins = win ? 10 + b.correct*2 + (stars===3?5:0) : 2 + b.correct;
+    coins = win ? 10 + score*2 + (stars===3?5:0) : 2 + b.correct;
     if(win && prev.best===3){ coins = Math.ceil(coins/2); notes.push('Je had al 3 sterren op deze les, dus de helft van de munten. Probeer ook eens een andere les!'); }
-    xp = win ? 30 + b.correct*6 + (stars>prev.best?10:0) : 8 + b.correct*2;
+    xp = win ? 30 + score*6 + (stars>prev.best?10:0) : 8 + b.correct*2;
     p.lessons[b.ref] = {best:Math.max(prev.best,stars), times:prev.times+1};
   } else {
     const key = b.ref==='champ' ? 'champ-'+w : bossKey(w,b.ref); const first = win && !p.badges[key];
@@ -157,9 +161,9 @@ function battleEnd(){
   if(happyGebruik(p)){ coins*=2; const o=happyOver(p); notes.push(`Happy hour: dubbele munten! ${o?`Nog ${o} gevecht${o===1?'':'en'} met dubbele munten.`:'Dat was je laatste happy-hour-gevecht.'}`); }
   const gb = geefBonussen(p); coins += gb.coins; notes.push(...gb.notes); herhState(p).n++;
   p.coins += coins; p.txp += xp; m.xp += xp;
-  p.log.unshift({d:Date.now(), l:b.kind==='wild'?b.ref:'boss:'+b.ref, s:b.correct, t:b.n, h:b.hints, r:b.rescue?(rescued?'ok':'mis'):'', rc:b.rescue?b.rescue.correct:0, rn:b.rescue?b.rescue.asked:0, cs:b.cshieldUsed?1:0, win}); p.log = p.log.slice(0,40);
+  p.log.unshift({d:Date.now(), l:b.kind==='wild'?b.ref:'boss:'+b.ref, s:b.correct, t:gevraagd, h:b.hints, r:b.rescue?(rescued?'ok':'mis'):'', rc:b.rescue?b.rescue.correct:0, rn:b.rescue?b.rescue.asked:0, cs:b.cshieldUsed?1:0, win}); p.log = p.log.slice(0,40);
   save();
-  go({s:'result', kind:b.kind, ref:b.ref, win, passed, rescued, stars, coins, xp, notes, reward, correct:b.correct, n:b.n, need:b.need, hints:b.hints, boss:b.boss, enemy:b.enemy});
+  go({s:'result', kind:b.kind, ref:b.ref, win, passed, rescued, stars, coins, xp, notes, reward, correct:b.correct, n:gevraagd, need:b.need, hints:b.hints, boss:b.boss, enemy:b.enemy});
   afterGain(m, tBefore, mBefore, sBefore);
 }
 function afterGain(m, tBefore, mBefore, sBefore){
@@ -194,7 +198,7 @@ function vBossIntro(){
   return bar()+`<div class="wrap"><button class="back" data-act="map">← Kaart</button><div class="panel intro qcard">${trImg(B.tr,'big-tr')}<div>
     <div class="label">${view.ref==='champ'?'Kampioen':'Eilandmeester'}</div><h1 style="font-size:34px;margin:4px 0 8px">${B.naam}</h1>
     <p style="margin:0 0 6px">"Dus jij bent ${esc(p.name)}. Laten we eens zien wat je hebt geleerd!"</p>
-    <p class="muted" style="margin:0 0 12px">Hij vecht met <b>${MON[ss.id].names[ss.stage-1]}</b>. Je krijgt ${sp.n} vragen uit alle lessen ${view.ref==='champ'?'van je wereld':'van dit eiland'}, en hebt er ${sp.need} goed nodig.</p>
+    <p class="muted" style="margin:0 0 12px">Hij vecht met <b>${MON[ss.id].names[ss.stage-1]}</b>. Raak hem ${sp.need} keer met een goed antwoord, dan is hij verslagen. De vragen komen uit alle lessen ${view.ref==='champ'?'van je wereld':'van dit eiland'}. Je mag ${sp.n-sp.need} fouten maken.</p>
     <div class="row"><div style="width:90px">${sprite(B.mon)}</div><button class="btn sun" data-act="bossgo">Gevecht beginnen! ⚔️</button></div></div></div></div>`;
 }
 function confetti(){

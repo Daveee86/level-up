@@ -6,9 +6,9 @@ const L = [];
 
 /* Een les met een vaste lijst vragen. Elke vraag: [vraag, goed antwoord, [foute antwoorden], uitleg]. */
 function lesBank(b){
-  const facts = [...new Set(b.vragen.map(r => r[3]))];
+  // Alleen de korte uitleg. De uitleg per vraag krijgt het kind na elk antwoord te zien.
   L.push({id:b.id, vak:b.vak, g:b.g, titel:b.titel, nieuw:true,
-    uitleg:`<p>${esc(b.uitleg)}</p>${b.extra==='planeten'?planetOverview():''}<details class="learnnotes" open><summary>Dit leer je in deze les</summary><ul>${facts.map(f=>`<li>${esc(f)}</li>`).join('')}</ul></details>`,
+    uitleg:`<p>${esc(b.uitleg)}</p>${b.extra==='planeten'?planetOverview():''}`,
     vb:esc(b.vb),
     gen(){ const r = pick(b.vragen); const opts = shuffle([r[1], ...r[2]]);
       return {q:r[0], opts, ans:r[1], uitleg:r[3], say:r[0]+(b.g[1]<=3?' Kies uit: '+opts.join('. '):''), big:false}; }
